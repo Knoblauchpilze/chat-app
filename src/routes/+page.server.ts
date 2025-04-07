@@ -1,7 +1,7 @@
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto.js';
 import { loadChatCookies, setChatCookies } from '$lib/cookies';
 import { getErrorMessageFromApiResponse } from '$lib/rest/api';
-import { createChatUser } from '$lib/services/users';
+import { createChatUser } from '$lib/services/chats';
 import { fail, redirect } from '@sveltejs/kit';
 import {
 	getHttpStatusCodeFromApiFailure,

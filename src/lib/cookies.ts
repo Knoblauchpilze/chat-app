@@ -1,56 +1,64 @@
-import { type Cookies, redirect } from '@sveltejs/kit';
-import { ApiKeyResponseDto } from '$lib/communication/api/apiKeyResponseDto';
+import { redirect, type Cookies } from '@sveltejs/kit';
+import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
 import { HttpStatus } from '@totocorpsoftwareinc/frontend-toolkit';
 
 const DEFAULT_COOKIES_OPT = {
 	path: '/'
 };
 
+const COOKIE_KEY_CHAT_USER = 'chat-user';
 const COOKIE_KEY_API_USER = 'api-user';
-const COOKIE_KEY_API_KEY = 'api-key';
+const COOKIE_KEY_CHAT_NAME = 'chat-name';
 
-export { COOKIE_KEY_API_USER, COOKIE_KEY_API_KEY };
+export { COOKIE_KEY_API_USER, COOKIE_KEY_CHAT_USER, COOKIE_KEY_CHAT_NAME };
 
 function validOrEmptyString(maybeValue: string | undefined, valid: boolean): string {
 	return valid ? (maybeValue as string) : '';
 }
 
-export interface SessionCookies {
+export interface ChatCookies {
+	readonly chatUser: string;
 	readonly apiUser: string;
-	readonly apiKey: string;
+	readonly chatName: string;
 }
 
-export function setSessionCookies(cookies: Cookies, apiKey: ApiKeyResponseDto) {
-	cookies.set(COOKIE_KEY_API_USER, apiKey.user, DEFAULT_COOKIES_OPT);
-	cookies.set(COOKIE_KEY_API_KEY, apiKey.key, DEFAULT_COOKIES_OPT);
+export function setChatCookies(cookies: Cookies, chatUser: ChatUserResponseDto) {
+	// TODO: Take chat user dto as argument
+	cookies.set(COOKIE_KEY_CHAT_USER, chatUser.id, DEFAULT_COOKIES_OPT);
+	cookies.set(COOKIE_KEY_API_USER, chatUser.apiUser, DEFAULT_COOKIES_OPT);
+	cookies.set(COOKIE_KEY_CHAT_NAME, chatUser.name, DEFAULT_COOKIES_OPT);
 }
 
-export function resetSessionCookies(cookies: Cookies) {
+export function resetChatCookies(cookies: Cookies) {
+	cookies.set(COOKIE_KEY_CHAT_USER, '', DEFAULT_COOKIES_OPT);
 	cookies.set(COOKIE_KEY_API_USER, '', DEFAULT_COOKIES_OPT);
-	cookies.set(COOKIE_KEY_API_KEY, '', DEFAULT_COOKIES_OPT);
+	cookies.set(COOKIE_KEY_CHAT_NAME, '', DEFAULT_COOKIES_OPT);
 }
 
-export function loadSessionCookies(cookies: Cookies): [boolean, SessionCookies] {
+export function loadChatCookies(cookies: Cookies): [boolean, ChatCookies] {
+	const maybeChatUser = cookies.get(COOKIE_KEY_CHAT_USER);
 	const maybeApiUser = cookies.get(COOKIE_KEY_API_USER);
-	const maybeApiKey = cookies.get(COOKIE_KEY_API_KEY);
+	const maybeChatName = cookies.get(COOKIE_KEY_CHAT_NAME);
 
+	const validChatUser = maybeChatUser !== undefined && maybeChatUser !== '';
 	const validApiUser = maybeApiUser !== undefined && maybeApiUser !== '';
-	const validApiKey = maybeApiKey !== undefined && maybeApiKey !== '';
-	const valid = validApiUser && validApiKey;
+	const validChatName = maybeChatName !== undefined && maybeChatName !== '';
+	const valid = validChatUser && validApiUser && validChatName;
 
-	const out: SessionCookies = {
+	const out: ChatCookies = {
+		chatUser: validOrEmptyString(maybeChatUser, validChatUser),
 		apiUser: validOrEmptyString(maybeApiUser, validApiUser),
-		apiKey: validOrEmptyString(maybeApiKey, validApiKey)
+		chatName: validOrEmptyString(maybeChatName, validChatName)
 	};
 
 	return [valid, out];
 }
 
-export function loadSessionCookiesOrRedirectToLogin(cookies: Cookies): SessionCookies {
-	const [valid, sessionCookies] = loadSessionCookies(cookies);
+export function loadCookiesOrRedirectToLogin(cookies: Cookies): ChatCookies {
+	const [valid, chatCookies] = loadChatCookies(cookies);
 	if (!valid) {
-		redirect(HttpStatus.SEE_OTHER, '/login');
+		redirect(HttpStatus.SEE_OTHER, '/');
 	}
 
-	return sessionCookies;
+	return chatCookies;
 }

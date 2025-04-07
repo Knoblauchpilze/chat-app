@@ -1,4 +1,4 @@
-import type { UserResponseDto } from '$lib/communication/api/userResponseDto';
+import type { UserResponseDto } from '$lib/communication/api/chatUserResponseDto';
 import type { UserUiDto } from '$lib/communication/ui/userUiDto';
 import { formatDate } from '$lib/time';
 

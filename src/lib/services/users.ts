@@ -1,28 +1,15 @@
-import { buildUserUrl } from '$lib/rest/api';
+import { buildApiUrl } from '$lib/rest/api';
 import { safeFetchJson, type ApiResponse } from '@totocorpsoftwareinc/frontend-toolkit';
 
-export async function createUser(email: string, password: string): Promise<ApiResponse> {
-	const url = buildUserUrl('');
-	const body = JSON.stringify({ email: email, password: password });
+export async function createChatUser(name: string): Promise<ApiResponse> {
+	const url = buildApiUrl('users');
+	const body = JSON.stringify({ name: name });
 
 	const params = {
 		method: 'POST',
 		body: body,
 		headers: {
 			'content-type': 'application/json'
-		}
-	};
-
-	return safeFetchJson(url, params);
-}
-
-export async function getUser(apiKey: string, user: string): Promise<ApiResponse> {
-	const url = buildUserUrl(user);
-
-	const params = {
-		method: 'GET',
-		headers: {
-			'X-Api-Key': apiKey
 		}
 	};
 

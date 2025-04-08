@@ -4,58 +4,62 @@
 		FormField,
 		StyledButton,
 		StyledError,
-		StyledText,
-		StyledTitle
+		StyledText
 	} from '@totocorpsoftwareinc/frontend-toolkit';
-	import type { PageData } from './$types';
 
 	interface Props {
-		data: PageData;
 		form: HTMLFormElement;
 	}
 
-	let { form = $bindable(), data }: Props = $props();
-
-	function resetFormError() {
-		if (!form) {
-			return;
-		}
-		form.message = '';
-	}
+	let { form = $bindable() }: Props = $props();
+	let isSubmitting = $state(false);
 </script>
 
-<FlexContainer bgColor="bg-overlay" styling="w-3/5">
-	<StyledTitle text="Chatterly" />
+<FlexContainer
+	justify="center"
+	align="center"
+	bgColor="bg-primary-selected"
+	styling="h-screen w-full"
+>
+	<FlexContainer
+		bgColor="bg-primary"
+		extensible={false}
+		styling="w-full max-w-md rounded-lg p-8 shadow-lg"
+	>
+		<h1 class="text-secondary mb-6 text-center text-3xl font-bold italic">Welcome to Chatterly</h1>
 
-	{#if !data.registered}
-		<FlexContainer extensible={false} align="stretch" styling="h-3/5">
-			<StyledText text="Choose your screen name" />
+		<form method="POST" action="?/register" class="space-y-4">
+			<FormField
+				labelId="handle"
+				label="Your name"
+				labelStyling="text-secondary mb-1 block font-medium"
+			>
+				<input
+					type="text"
+					id="handle"
+					name="handle"
+					placeholder="Enter your name"
+					required
+					value={form?.name ?? ''}
+					class="border-primary-hover focus:ring-secondary w-full rounded-md border bg-white p-3 focus:ring-2 focus:outline-none"
+				/>
+			</FormField>
 
-			<form method="POST" action="?/register" class="flex flex-1 flex-col justify-evenly">
-				<FormField label="Screen name:" labelId="handle" labelStyling="text-secondary">
-					<input
-						id="handle"
-						type="text"
-						name="handle"
-						placeholder="Enter your screen name"
-						required
-						value={form?.email ?? ''}
-						oninput={resetFormError}
-						class="bg-white"
-					/>
-				</FormField>
-				<StyledButton text="Chat now!" />
+			<div class="pt-2">
+				<StyledButton text={'Join the chat'} styling="w-full" />
+			</div>
 
-				{#if form?.message}
-					<div class="fixed bottom-4">
-						<StyledError text="Failed to join chat: {form.message}" />
-					</div>
-				{/if}
-			</form>
-		</FlexContainer>
-	{:else}
-		<FlexContainer>
-			<StyledTitle text="Ah this is unexpected" />
-		</FlexContainer>
-	{/if}
+			<StyledText
+				text="Enter any name to start chatting with others"
+				textColor="text-gray-500"
+				styling="mt-4 text-center text-sm"
+			/>
+
+			{#if form?.message}
+				<div class="mt-4">
+					<StyledError text="Failed to join chat: {form.message}" />
+				</div>
+			{/if}
+		</form>
+	</FlexContainer>
 </FlexContainer>

@@ -12,7 +12,6 @@
 	}
 
 	let { form = $bindable() }: Props = $props();
-	let isSubmitting = $state(false);
 </script>
 
 <FlexContainer
@@ -46,7 +45,7 @@
 			</FormField>
 
 			<div class="pt-2">
-				<StyledButton text={'Join the chat'} styling="w-full" />
+				<StyledButton text="Join the chat" styling="w-full" />
 			</div>
 
 			<StyledText

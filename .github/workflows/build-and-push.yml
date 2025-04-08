@@ -39,6 +39,9 @@ jobs:
       - name: Check code style with linter
         run: |
           npm run lint
+      - name: Setup env file
+        run: |
+          make setup
       - name: Run tests with coverage
         run: |
           npm run coverage

@@ -1,6 +1,6 @@
 import { describe, it, assert, expect, afterEach } from 'vitest';
 import fetchMock, { type CallLog, type RouteMatcher } from 'fetch-mock';
-import { createChatUser } from './chats';
+import { createChatUser } from './users';
 
 describe('Create chat user', () => {
 	// https://vitest.dev/api/#aftereach

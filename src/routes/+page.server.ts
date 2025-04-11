@@ -1,4 +1,4 @@
-import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto.js';
+import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
 import { loadChatCookies, setChatCookies } from '$lib/cookies';
 import { getErrorMessageFromApiResponse } from '$lib/rest/api';
 import { createChatUser } from '$lib/services/users';

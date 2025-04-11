@@ -1,10 +1,5 @@
 <script lang="ts">
-	import {
-		FlexContainer,
-		StyledButton,
-		StyledText,
-		StyledTitle
-	} from '@totocorpsoftwareinc/frontend-toolkit';
+	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
 
 	let { data } = $props();
 
@@ -64,7 +59,7 @@
 		<div class="p-2">
 			<StyledText text="Rooms" styling="text-secondary text-sm font-semibold mb-2" />
 			<ul>
-				{#each chatRooms as room}
+				{#each chatRooms as room (room.id)}
 					<li class="mb-1">
 						<button
 							class="hover:bg-primary-hover flex w-full items-center justify-between rounded p-2 text-left"
@@ -92,7 +87,7 @@
 
 		<!-- Messages area -->
 		<div class="flex-1 space-y-4 overflow-y-auto p-4">
-			{#each messages as message}
+			{#each messages as message (message.id)}
 				<div
 					class="flex flex-col {message.sender === data.user.name ? 'items-end' : 'items-start'}"
 				>

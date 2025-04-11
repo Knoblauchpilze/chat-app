@@ -79,7 +79,8 @@ export function formatDate(date: Date): string {
 		hour: 'numeric',
 		minute: 'numeric',
 		second: 'numeric',
-		hour12: false
+		hour12: false,
+		timeZone: 'UTC'
 	};
 
 	return date.toLocaleDateString('en-EN', options);

@@ -10,19 +10,19 @@ const SAMPLE_CHAT_USER_RESPONSE = {
 };
 
 describe.concurrent('Converting API response to UI DTO', () => {
-	it('should preserve user ID', () => {
+	it('should preserve identifier', () => {
 		const inputDto = new ChatUserResponseDto(SAMPLE_CHAT_USER_RESPONSE);
 		const actual = chatUserResponseDtoToChatUserUiDto(inputDto);
 		expect(actual.id).toBe(SAMPLE_CHAT_USER_RESPONSE.id);
 	});
 
-	it('should preserve user email', () => {
+	it('should preserve name', () => {
 		const inputDto = new ChatUserResponseDto(SAMPLE_CHAT_USER_RESPONSE);
 		const actual = chatUserResponseDtoToChatUserUiDto(inputDto);
 		expect(actual.name).toBe(SAMPLE_CHAT_USER_RESPONSE.name);
 	});
 
-	it('should preserve user password', () => {
+	it('should preserve api user', () => {
 		const inputDto = new ChatUserResponseDto(SAMPLE_CHAT_USER_RESPONSE);
 		const actual = chatUserResponseDtoToChatUserUiDto(inputDto);
 		expect(actual.apiUser).toBe(SAMPLE_CHAT_USER_RESPONSE.api_user);

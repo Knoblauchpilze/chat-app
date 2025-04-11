@@ -15,3 +15,13 @@ export async function createChatUser(name: string): Promise<ApiResponse> {
 
 	return safeFetchJson(url, params);
 }
+
+export async function getChatUser(id: string): Promise<ApiResponse> {
+	const url = buildApiUrl('users/' + id);
+
+	const params = {
+		method: 'GET'
+	};
+
+	return safeFetchJson(url, params);
+}

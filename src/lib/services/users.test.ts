@@ -1,6 +1,7 @@
 import { describe, it, assert, expect, afterEach } from 'vitest';
-import fetchMock, { type CallLog, type RouteMatcher } from 'fetch-mock';
-import { createChatUser } from './users';
+import fetchMock from 'fetch-mock';
+import { createChatUser } from '$lib/services/users';
+import { createRouteMatcher } from '$lib/services/testUtils';
 
 describe('Create chat user', () => {
 	// https://vitest.dev/api/#aftereach
@@ -10,7 +11,7 @@ describe('Create chat user', () => {
 		fetchMock.hardReset();
 	});
 
-	it('should use route from env', () => {
+	it('should use route from env', async () => {
 		fetchMock
 			.mockGlobal()
 			.route(
@@ -19,12 +20,12 @@ describe('Create chat user', () => {
 				'createChatUserRoute'
 			);
 
-		createChatUser('my_user');
+		await createChatUser('my_user');
 
 		assert(fetchMock.callHistory.called('createChatUserRoute'));
 	});
 
-	it('should send request consistent with input name', () => {
+	it('should send request consistent with input name', async () => {
 		const expectedBody = JSON.stringify({ name: 'my_user' });
 
 		fetchMock
@@ -40,7 +41,7 @@ describe('Create chat user', () => {
 				'createChatUserRoute'
 			);
 
-		createChatUser('my_user');
+		await createChatUser('my_user');
 
 		assert(fetchMock.callHistory.called('createChatUserRoute'));
 	});
@@ -72,44 +73,3 @@ describe('Create chat user', () => {
 		});
 	});
 });
-
-function createRouteMatcher(
-	expectedUrl: string,
-	expectedMethod: string,
-	expectedContentType?: string,
-	expectedBody?: string
-): RouteMatcher {
-	// https://www.wheresrhys.co.uk/fetch-mock/docs/#examples
-	return function (log: CallLog) {
-		if (log.url !== expectedUrl) {
-			return false;
-		}
-		if (!log.options) {
-			return false;
-		}
-
-		if (log.options.method !== expectedMethod) {
-			return false;
-		}
-
-		if (expectedContentType) {
-			if (!log.options.headers) {
-				return false;
-			}
-
-			if (
-				!Object.entries(log.options.headers).some(
-					([header, value]) => header === 'content-type' && value === expectedContentType
-				)
-			) {
-				return false;
-			}
-		}
-
-		if (!expectedBody) {
-			return true;
-		}
-
-		return expectedBody === log.options.body;
-	};
-}

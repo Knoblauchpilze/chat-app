@@ -1,6 +1,6 @@
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
 import { describe, expect, it } from 'vitest';
-import { chatUserResponseDtoToChatUserUiDto } from './chatUserConverter';
+import { chatUserResponseDtoToChatUserUiDto } from '$lib/converters/chatUserConverter';
 
 const SAMPLE_CHAT_USER_RESPONSE = {
 	id: 'e6e68c94-8ff6-483a-94bf-95aecaf2aab2',

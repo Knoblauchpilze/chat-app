@@ -53,7 +53,7 @@
 				{#each data.rooms as room (room.id)}
 					<li class="mb-1">
 						<button
-							class="hover:bg-primary-hover flex w-full items-center justify-between rounded p-2 text-left"
+							class="hover:bg-primary-hover text-secondary flex w-full items-center justify-between rounded p-2 text-left"
 						>
 							<span>{room.name}</span>
 						</button>

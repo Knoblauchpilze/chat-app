@@ -4,7 +4,6 @@ export class RoomResponseDto {
 	readonly createdAt: Date = new Date();
 
 	constructor(data: object) {
-		// https://stackoverflow.com/questions/43894565/cast-object-to-interface-in-typescript
 		if ('id' in data && typeof data.id === 'string') {
 			this.id = data.id;
 		}

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
-	import { type MessageUiDto } from '$lib/communication/ui/messageUiDto';
 
 	let { data } = $props();
 
@@ -40,11 +39,13 @@
 			<ul>
 				{#each data.rooms as room (room.id)}
 					<li class="mb-1">
-						<button
+						<!-- <StyledLink text={room.name} showAsButton={true} /> -->
+						<a
 							class="hover:bg-primary-hover text-secondary flex w-full items-center justify-between rounded p-2 text-left"
+							href={'/chats/' + room.id}
 						>
-							<span>{room.name}</span>
-						</button>
+							{room.name}
+						</a>
 					</li>
 				{/each}
 			</ul>

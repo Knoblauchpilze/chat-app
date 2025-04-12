@@ -3,14 +3,6 @@
 
 	let { data } = $props();
 
-	const chatRooms = [
-		{ id: '1', name: 'General', unread: 3 },
-		{ id: '2', name: 'Random', unread: 0 },
-		{ id: '3', name: 'Work', unread: 12 },
-		{ id: '4', name: 'Friends', unread: 1 },
-		{ id: '5', name: 'Family', unread: 0 }
-	];
-
 	const messages = [
 		{ id: '1', sender: 'Alice', content: 'Hey there!', timestamp: '10:30 AM' },
 		{ id: '2', sender: 'Bob', content: 'How are you doing?', timestamp: '10:32 AM' },
@@ -46,8 +38,7 @@
 	<!-- Sidebar with rooms -->
 	<div class="bg-primary border-primary-hover w-64 overflow-y-auto border-r">
 		<div class="border-primary-hover border-b p-4">
-			<!-- <StyledTitle text="Chatterly" styling="text-xl" /> -->
-			<StyledTitle text="Chatterly" />
+			<StyledTitle text="Chatterly" textSize="text-xl" />
 			<div class="mt-2 flex items-center justify-between">
 				<StyledText text={`Hello, ${data.user.name}`} styling="text-sm" />
 				<form method="POST" action="?/logout" class="inline">
@@ -59,17 +50,12 @@
 		<div class="p-2">
 			<StyledText text="Rooms" styling="text-secondary text-sm font-semibold mb-2" />
 			<ul>
-				{#each chatRooms as room (room.id)}
+				{#each data.rooms as room (room.id)}
 					<li class="mb-1">
 						<button
 							class="hover:bg-primary-hover flex w-full items-center justify-between rounded p-2 text-left"
 						>
 							<span>{room.name}</span>
-							{#if room.unread > 0}
-								<span class="bg-secondary rounded-full px-2 py-0.5 text-xs text-white"
-									>{room.unread}</span
-								>
-							{/if}
 						</button>
 					</li>
 				{/each}
@@ -81,8 +67,7 @@
 	<div class="bg-primary-selected flex flex-1 flex-col">
 		<!-- Chat header -->
 		<div class="border-primary-hover bg-primary flex items-center border-b p-4">
-			<!-- <StyledTitle text="General" styling="text-lg" /> -->
-			<StyledTitle text="General" />
+			<StyledTitle text="General" textSize="text-lg" />
 		</div>
 
 		<!-- Messages area -->

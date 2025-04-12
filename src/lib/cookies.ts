@@ -6,49 +6,34 @@ const DEFAULT_COOKIES_OPT = {
 	path: '/'
 };
 
-const COOKIE_KEY_CHAT_USER = 'chat-user';
-const COOKIE_KEY_API_USER = 'api-user';
-const COOKIE_KEY_CHAT_NAME = 'chat-name';
+const COOKIE_KEY_CHAT_USER_ID = 'chat-user-id';
 
-export { COOKIE_KEY_API_USER, COOKIE_KEY_CHAT_USER, COOKIE_KEY_CHAT_NAME };
+export { COOKIE_KEY_CHAT_USER_ID };
 
 function validOrEmptyString(maybeValue: string | undefined, valid: boolean): string {
 	return valid ? (maybeValue as string) : '';
 }
 
 export interface ChatCookies {
-	readonly chatUser: string;
-	readonly apiUser: string;
-	readonly chatName: string;
+	readonly chatUserId: string;
 }
 
 export function setChatCookies(cookies: Cookies, chatUser: ChatUserResponseDto) {
-	// TODO: Take chat user dto as argument
-	cookies.set(COOKIE_KEY_CHAT_USER, chatUser.id, DEFAULT_COOKIES_OPT);
-	cookies.set(COOKIE_KEY_API_USER, chatUser.apiUser, DEFAULT_COOKIES_OPT);
-	cookies.set(COOKIE_KEY_CHAT_NAME, chatUser.name, DEFAULT_COOKIES_OPT);
+	cookies.set(COOKIE_KEY_CHAT_USER_ID, chatUser.id, DEFAULT_COOKIES_OPT);
 }
 
 export function resetChatCookies(cookies: Cookies) {
-	cookies.set(COOKIE_KEY_CHAT_USER, '', DEFAULT_COOKIES_OPT);
-	cookies.set(COOKIE_KEY_API_USER, '', DEFAULT_COOKIES_OPT);
-	cookies.set(COOKIE_KEY_CHAT_NAME, '', DEFAULT_COOKIES_OPT);
+	cookies.set(COOKIE_KEY_CHAT_USER_ID, '', DEFAULT_COOKIES_OPT);
 }
 
 export function loadChatCookies(cookies: Cookies): [boolean, ChatCookies] {
-	const maybeChatUser = cookies.get(COOKIE_KEY_CHAT_USER);
-	const maybeApiUser = cookies.get(COOKIE_KEY_API_USER);
-	const maybeChatName = cookies.get(COOKIE_KEY_CHAT_NAME);
+	const maybeChatUserId = cookies.get(COOKIE_KEY_CHAT_USER_ID);
 
-	const validChatUser = maybeChatUser !== undefined && maybeChatUser !== '';
-	const validApiUser = maybeApiUser !== undefined && maybeApiUser !== '';
-	const validChatName = maybeChatName !== undefined && maybeChatName !== '';
-	const valid = validChatUser && validApiUser && validChatName;
+	const validChatUserId = maybeChatUserId !== undefined && maybeChatUserId !== '';
+	const valid = validChatUserId;
 
 	const out: ChatCookies = {
-		chatUser: validOrEmptyString(maybeChatUser, validChatUser),
-		apiUser: validOrEmptyString(maybeApiUser, validApiUser),
-		chatName: validOrEmptyString(maybeChatName, validChatName)
+		chatUserId: validOrEmptyString(maybeChatUserId, validChatUserId)
 	};
 
 	return [valid, out];

@@ -1,9 +1,11 @@
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
 import { RoomResponseDto } from '$lib/communication/api/roomResponseDto.js';
+import { chatUserResponseDtoToChatUserUiDto } from '$lib/converters/chatUserConverter';
+import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
 import { loadChatCookies, resetChatCookies, setChatCookies } from '$lib/cookies';
-import { getErrorMessageFromApiResponse } from '$lib/rest/api';
+import { getErrorMessageFromApiResponse, handleApiError } from '$lib/rest/api';
 import { getRoomsForUser } from '$lib/services/rooms.js';
-import { createChatUser, listUsersByName } from '$lib/services/users';
+import { createChatUser, getChatUser, listUsersByName } from '$lib/services/users';
 import { fail, redirect } from '@sveltejs/kit';
 import {
 	getHttpStatusCodeFromApiFailure,
@@ -16,19 +18,25 @@ import {
 export async function load({ cookies }) {
 	const [valid, chatData] = loadChatCookies(cookies);
 
+	let user: ChatUserResponseDto | undefined = undefined;
+	let rooms: RoomResponseDto[] = [];
+
 	if (valid) {
-		return {
-			registered: true,
-			user: {
-				chatUser: chatData.chatUser,
-				apiUser: chatData.apiUser,
-				chatName: chatData.chatName
-			}
-		};
+		let apiResponse = await getChatUser(chatData.chatUserId);
+		handleApiError(apiResponse);
+
+		user = parseApiResponseAsSingleValue(apiResponse, ChatUserResponseDto);
+
+		apiResponse = await getRoomsForUser(chatData.chatUserId);
+		handleApiError(apiResponse);
+
+		rooms = parseApiResponseAsArray(apiResponse, RoomResponseDto);
 	}
 
 	return {
-		registered: false
+		registered: user !== undefined,
+		user: user ? chatUserResponseDtoToChatUserUiDto(user) : undefined,
+		rooms: rooms.map((room) => roomResponseDtoToRoomUiDto(room))
 	};
 }
 
@@ -105,11 +113,8 @@ export const actions = {
 			});
 		}
 
-		console.log('response: ', JSON.stringify(apiResponse));
-
 		const rooms = parseApiResponseAsArray(apiResponse, RoomResponseDto);
 		if (rooms === undefined || rooms.length === 0) {
-			console.log('haha: ', JSON.stringify(apiResponse));
 			return fail(HttpStatus.NOT_FOUND, {
 				message: "You don't even have a room dude!",
 				name: name
@@ -117,8 +122,6 @@ export const actions = {
 		}
 
 		setChatCookies(cookies, chatUserDto);
-
-		console.log('unbelievable: ', JSON.stringify(rooms));
 
 		redirect(HttpStatus.SEE_OTHER, '/chats/' + rooms[0].id);
 	}

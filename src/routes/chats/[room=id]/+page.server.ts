@@ -20,7 +20,7 @@ export async function load({ params, cookies }) {
 	const chatCookies = loadCookiesOrRedirectToLogin(cookies);
 
 	// Fetch the user's data
-	let apiResponse = await getChatUser(chatCookies.chatUser);
+	let apiResponse = await getChatUser(chatCookies.chatUserId);
 	handleApiError(apiResponse);
 
 	const chatUserDto = parseApiResponseAsSingleValue(apiResponse, ChatUserResponseDto);

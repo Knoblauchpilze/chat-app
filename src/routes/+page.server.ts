@@ -1,6 +1,8 @@
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
-import { loadChatCookies, setChatCookies } from '$lib/cookies';
+import { RoomResponseDto } from '$lib/communication/api/roomResponseDto.js';
+import { loadChatCookies, resetChatCookies, setChatCookies } from '$lib/cookies';
 import { getErrorMessageFromApiResponse } from '$lib/rest/api';
+import { getRoomsForUser } from '$lib/services/rooms.js';
 import { createChatUser, listUsersByName } from '$lib/services/users';
 import { fail, redirect } from '@sveltejs/kit';
 import {
@@ -34,6 +36,8 @@ export const actions = {
 	register: async ({ cookies, request }) => {
 		const data = await request.formData();
 
+		resetChatCookies(cookies);
+
 		const name = data.get('handle');
 		if (!name) {
 			return fail(HttpStatus.UNPROCESSABLE_ENTITY, {
@@ -60,12 +64,12 @@ export const actions = {
 			});
 		}
 
-		if (!userExists) {
-			const chatUserDto = parseApiResponseAsSingleValue(apiResponse, ChatUserResponseDto);
+		let chatUserDto: ChatUserResponseDto | undefined = undefined;
 
-			if (chatUserDto !== undefined) {
-				setChatCookies(cookies, chatUserDto);
-			} else {
+		if (!userExists) {
+			chatUserDto = parseApiResponseAsSingleValue(apiResponse, ChatUserResponseDto);
+
+			if (chatUserDto === undefined) {
 				fail(HttpStatus.INTERNAL_SERVER_ERROR, {
 					message: 'Failed to register user',
 					name: name
@@ -80,9 +84,42 @@ export const actions = {
 				});
 			}
 
-			setChatCookies(cookies, chatUserDtos[0]);
+			chatUserDto = chatUserDtos[0];
 		}
 
-		redirect(HttpStatus.SEE_OTHER, '/chats');
+		if (chatUserDto === undefined) {
+			return fail(HttpStatus.INTERNAL_SERVER_ERROR, {
+				message: 'Failed to join chat',
+				name: name
+			});
+		}
+
+		apiResponse = await getRoomsForUser(chatUserDto.id);
+		if (apiResponse.isError()) {
+			const failure = tryGetFailureReason(apiResponse);
+			const code = getHttpStatusCodeFromApiFailure(failure);
+
+			return fail(code, {
+				message: getErrorMessageFromApiResponse(apiResponse),
+				name: name
+			});
+		}
+
+		console.log('response: ', JSON.stringify(apiResponse));
+
+		const rooms = parseApiResponseAsArray(apiResponse, RoomResponseDto);
+		if (rooms === undefined || rooms.length === 0) {
+			console.log('haha: ', JSON.stringify(apiResponse));
+			return fail(HttpStatus.NOT_FOUND, {
+				message: "You don't even have a room dude!",
+				name: name
+			});
+		}
+
+		setChatCookies(cookies, chatUserDto);
+
+		console.log('unbelievable: ', JSON.stringify(rooms));
+
+		redirect(HttpStatus.SEE_OTHER, '/chats/' + rooms[0].id);
 	}
 };

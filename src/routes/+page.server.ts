@@ -1,11 +1,12 @@
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
 import { loadChatCookies, setChatCookies } from '$lib/cookies';
 import { getErrorMessageFromApiResponse } from '$lib/rest/api';
-import { createChatUser } from '$lib/services/users';
+import { createChatUser, listUsersByName } from '$lib/services/users';
 import { fail, redirect } from '@sveltejs/kit';
 import {
 	getHttpStatusCodeFromApiFailure,
 	HttpStatus,
+	parseApiResponseAsArray,
 	parseApiResponseAsSingleValue,
 	tryGetFailureReason
 } from '@totocorpsoftwareinc/frontend-toolkit';
@@ -41,7 +42,14 @@ export const actions = {
 			});
 		}
 
-		const apiResponse = await createChatUser(name as string);
+		let userExists = false;
+		let apiResponse = await createChatUser(name as string);
+
+		if (apiResponse.statusCode() == HttpStatus.CONFLICT) {
+			apiResponse = await listUsersByName(name as string);
+			userExists = apiResponse.isSuccess();
+		}
+
 		if (apiResponse.isError()) {
 			const failure = tryGetFailureReason(apiResponse);
 			const code = getHttpStatusCodeFromApiFailure(failure);
@@ -52,14 +60,27 @@ export const actions = {
 			});
 		}
 
-		const chatUserDto = parseApiResponseAsSingleValue(apiResponse, ChatUserResponseDto);
-		if (chatUserDto !== undefined) {
-			setChatCookies(cookies, chatUserDto);
+		if (!userExists) {
+			const chatUserDto = parseApiResponseAsSingleValue(apiResponse, ChatUserResponseDto);
+
+			if (chatUserDto !== undefined) {
+				setChatCookies(cookies, chatUserDto);
+			} else {
+				fail(HttpStatus.INTERNAL_SERVER_ERROR, {
+					message: 'Failed to register user',
+					name: name
+				});
+			}
 		} else {
-			fail(HttpStatus.INTERNAL_SERVER_ERROR, {
-				message: 'Failed to register user',
-				name: name
-			});
+			const chatUserDtos = parseApiResponseAsArray(apiResponse, ChatUserResponseDto);
+			if (chatUserDtos.length !== 1) {
+				return fail(HttpStatus.INTERNAL_SERVER_ERROR, {
+					message: 'Unexpected server response for user data',
+					name: name
+				});
+			}
+
+			setChatCookies(cookies, chatUserDtos[0]);
 		}
 
 		redirect(HttpStatus.SEE_OTHER, '/chats');

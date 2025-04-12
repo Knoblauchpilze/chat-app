@@ -25,3 +25,18 @@ export async function getChatUser(id: string): Promise<ApiResponse> {
 
 	return safeFetchJson(url, params);
 }
+
+export async function listUsersByName(name: string): Promise<ApiResponse> {
+	// https://stackoverflow.com/questions/35038857/setting-query-string-using-fetch-get-request
+	const queryParams = new URLSearchParams({
+		name: name
+	});
+
+	const url = buildApiUrl('users?' + queryParams.toString());
+
+	const params = {
+		method: 'GET'
+	};
+
+	return safeFetchJson(url, params);
+}

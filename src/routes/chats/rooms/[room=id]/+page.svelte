@@ -42,7 +42,7 @@
 						<!-- <StyledLink text={room.name} showAsButton={true} /> -->
 						<a
 							class="hover:bg-primary-hover text-secondary flex w-full items-center justify-between rounded p-2 text-left"
-							href={'/chats/' + room.id}
+							href={'/chats/rooms/' + room.id}
 						>
 							{room.name}
 						</a>

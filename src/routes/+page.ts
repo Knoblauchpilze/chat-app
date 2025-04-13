@@ -7,7 +7,7 @@ import { HttpStatus } from '@totocorpsoftwareinc/frontend-toolkit';
 export async function load({ data }) {
 	if (data.registered) {
 		if (data.rooms.length > 0) {
-			redirect(HttpStatus.SEE_OTHER, '/chats/' + data.rooms[0].id);
+			redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + data.rooms[0].id);
 		}
 
 		error(HttpStatus.NOT_FOUND, 'You are not a member of any room!');

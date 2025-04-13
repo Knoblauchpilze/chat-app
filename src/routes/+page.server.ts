@@ -123,6 +123,6 @@ export const actions = {
 
 		setChatCookies(cookies, chatUserDto);
 
-		redirect(HttpStatus.SEE_OTHER, '/chats/' + rooms[0].id);
+		redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + rooms[0].id);
 	}
 };

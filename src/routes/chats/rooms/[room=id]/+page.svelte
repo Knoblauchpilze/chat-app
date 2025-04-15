@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
-	import { connectToServer, type SocketProps } from '$lib/tcp/connection';
+	import { connectToServer } from '$lib/tcp/connection';
 
 	let { data } = $props();
 
 	// https://stackoverflow.com/questions/69151604/how-to-access-websocket-in-svelte
-	let socket;
 	onMount(() => async () => {
 		// https://stackoverflow.com/questions/74457685/how-do-i-use-net-module-node-js-tcp-client-in-html-browser
 		console.log('start');

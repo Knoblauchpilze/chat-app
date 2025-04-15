@@ -17,13 +17,15 @@
 	},
 	"dependencies": {
 		"@tailwindcss/vite": "^4.1.4",
-		"@totocorpsoftwareinc/frontend-toolkit": "^0.0.42"
+		"@totocorpsoftwareinc/frontend-toolkit": "^0.0.42",
+		"uuid": "^11.1.0"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.8",
 		"@sveltejs/adapter-node": "^5.2.12",
 		"@sveltejs/kit": "^2.20.7",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
+		"@types/node": "^22.14.1",
 		"@vitest/coverage-v8": "^3.1.1",
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.24.0",

@@ -15,6 +15,7 @@
 			clientId: '0198ed26-8e92-4b81-aec0-aaaff33b6a11'
 		};
 		const socket = await connectToServer(props);
+		socket.close();
 	});
 
 	let newMessage = $state('');

@@ -1,4 +1,3 @@
-import net from 'net';
 import { parse as uuidParse } from 'uuid';
 
 export interface SocketProps {
@@ -9,49 +8,40 @@ export interface SocketProps {
 
 const DEFAULT_CONNECT_TIMEOUT_MS = 5000;
 
-export function connectToServer(props: SocketProps): Promise<net.Socket> {
+export function connectToServer(props: SocketProps): Promise<WebSocket> {
 	return new Promise((resolve, reject) => {
-		// https://cs.lmu.edu/~ray/notes/jsnetexamples/
 		// https://stackoverflow.com/questions/4973622/difference-between-socket-and-websocket
-		const client = new net.Socket();
+		// https://stackoverflow.com/questions/74457685/how-do-i-use-net-module-node-js-tcp-client-in-html-browser
+		const wsUrl = `ws://${props.host}:${props.port}`;
+
+		const socket = new WebSocket(wsUrl);
 
 		const timeoutId = setTimeout(() => {
-			client.destroy();
+			socket.close();
 			reject(new Error(`Connection timeout after ${DEFAULT_CONNECT_TIMEOUT_MS}ms`));
 		}, DEFAULT_CONNECT_TIMEOUT_MS);
 
-		client.on('connect', () => {
+		socket.addEventListener('open', () => {
 			clearTimeout(timeoutId);
 
 			// https://www.npmjs.com/package/uuid#uuidparsestr
 			const dataToSend = uuidParse(props.clientId);
 
-			const writeSuccess = client.write(dataToSend, (err) => {
-				if (err) {
-					client.destroy();
-					reject(new Error(`Failed to send client ID: ${err?.message}`));
-					return;
-				}
+			socket.send(dataToSend);
 
-				// Successfully connected and sent client ID
-				resolve(client);
-			});
-
-			if (!writeSuccess) {
-				client.once('drain', () => {
-					resolve(client);
-				});
-			}
+			resolve(socket);
 		});
 
-		client.on('error', (err) => {
+		socket.addEventListener('error', () => {
 			clearTimeout(timeoutId);
-			reject(new Error(`Connection error: ${err.message}`));
+			reject(new Error('WebSocket connection error'));
 		});
 
-		client.connect({
-			host: props.host,
-			port: props.port
+		socket.addEventListener('close', (event) => {
+			clearTimeout(timeoutId);
+			if (!socket.OPEN) {
+				reject(new Error(`WebSocket connection closed: ${event.reason || 'Unknown reason'}`));
+			}
 		});
 	});
 }

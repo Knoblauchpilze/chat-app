@@ -16,7 +16,7 @@ export function connectToServer(props: SocketProps): Promise<WebSocket> {
 
 		// https://stackoverflow.com/questions/4973622/difference-between-socket-and-websocket
 		// https://stackoverflow.com/questions/74457685/how-do-i-use-net-module-node-js-tcp-client-in-html-browser
-		const wsUrl = `ws://${host}:${port}/chats/ws`;
+		const wsUrl = `ws://${host}:${port}/v1/chats/ws`;
 
 		const socket = new WebSocket(wsUrl);
 

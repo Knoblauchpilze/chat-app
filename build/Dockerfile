@@ -1,10 +1,12 @@
 FROM node:22 AS builder
-ARG API_BASE_URL="http://my-awesome-service:80/v1/my-awesome-service"
-ARG USER_API_BASE_URL="http://user-service:80/v1/users"
+ARG API_BASE_URL="http://chat-service:80/v1/my-awesome-service"
+ARG TCP_API_HOST="http://chat-service"
+ARG TCP_API_PORT=49152
 WORKDIR /build
 COPY . ./
 RUN echo "PUBLIC_API_BASE_URL='${API_BASE_URL}'" > .env
-RUN echo "PUBLIC_USER_API_BASE_URL='${USER_API_BASE_URL}'" >> .env
+RUN echo "PUBLIC_TCP_API_HOST='${TCP_API_HOST}'" >> .env
+RUN echo "PUBLIC_TCP_API_PORT=${TCP_API_PORT}" >> .env
 RUN npm install
 RUN npm run build
 

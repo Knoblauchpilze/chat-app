@@ -8,11 +8,8 @@
 	// https://stackoverflow.com/questions/69151604/how-to-access-websocket-in-svelte
 	onMount(() => async () => {
 		// https://stackoverflow.com/questions/74457685/how-do-i-use-net-module-node-js-tcp-client-in-html-browser
-		console.log('start');
 		const props = {
-			host: 'localhost',
-			port: 49152,
-			clientId: '0198ed26-8e92-4b81-aec0-aaaff33b6a11'
+			clientId: data.user.id
 		};
 		const socket = await connectToServer(props);
 		socket.close();

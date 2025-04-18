@@ -1,6 +1,4 @@
 import { parse as uuidParse } from 'uuid';
-// https://stackoverflow.com/questions/43311238/javascript-referenceerror-websocket-is-not-defined
-import { WebSocket } from 'ws';
 
 export interface SocketProps {
 	host: string;

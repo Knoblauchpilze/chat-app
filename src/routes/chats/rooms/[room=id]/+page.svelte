@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
-	import { connectToServer } from '$lib/tcp/connection';
+	import { connectToServer } from '$lib/tcp/connect';
 
 	let { data } = $props();
 

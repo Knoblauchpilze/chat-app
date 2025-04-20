@@ -14,7 +14,8 @@ const config = {
 			out: 'svelte-build'
 		}),
 		alias: {
-			$styles: './src/styles'
+			$styles: './src/styles',
+			$tests: './tests'
 		}
 	}
 };

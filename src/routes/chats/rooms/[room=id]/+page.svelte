@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
-	import { connectToServer } from '$lib/tcp/connect';
+	import { Connection } from '$lib/tcp/connection';
 
 	let { data } = $props();
 
@@ -11,7 +11,8 @@
 		const props = {
 			clientId: data.user.id
 		};
-		const socket = await connectToServer(props);
+		const conn = new Connection(props);
+		const socket = await conn.socket;
 		socket.close();
 	});
 

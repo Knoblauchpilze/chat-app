@@ -1,78 +1,65 @@
-import { describe, it, expect, beforeEach, afterEach, assert } from 'vitest';
+import { describe, it, expect, assert } from 'vitest';
 import { connectToServer } from '$lib/tcp/connect';
 import { stringify as uuidStringify } from 'uuid';
-import { WebSocketServer } from 'ws';
+import { server } from '$tests/mocks/node';
+import { chats } from '$tests/mocks/chats';
+import { TEST_SERVER_HOST, TEST_SERVER_PORT } from '$tests/mocks/constants';
+import { waitFor } from '$tests/utils';
 
 const SAMPLE_UUID = 'ac9569ad-428d-4967-92fd-b806abb5e012';
-const SERVER_PORT = 6789;
+const TEST_SOCKET_PROPS = {
+	host: TEST_SERVER_HOST,
+	port: TEST_SERVER_PORT,
+	clientId: SAMPLE_UUID
+};
 
 describe('Connect to server', () => {
-	let server: WebSocketServer;
-	let receivedClientIds: string[] = [];
-
-	beforeEach(async () => {
-		receivedClientIds = [];
-
-		// https://github.com/websockets/ws?tab=readme-ov-file#simple-server
-		server = new WebSocketServer({ port: SERVER_PORT });
-
-		server.on('connection', (ws) => {
-			ws.on('message', (data) => {
-				try {
-					assert(data instanceof Buffer);
-
-					// https://www.npmjs.com/package/uuid#uuidstringifyarr-offset
-					const clientId = uuidStringify(data);
-					receivedClientIds.push(clientId);
-				} catch (err) {
-					console.error('Error while processing message:', err);
-					throw new Error('Caught error while handling server message');
-				}
-			});
-		});
-
-		await new Promise<void>((resolve) => {
-			server.once('listening', () => resolve());
-		});
-	});
-
-	afterEach(async () => {
-		await new Promise<void>((resolve) => {
-			server.close(() => resolve());
-		});
-	});
-
 	it('successfully connects to server', async () => {
-		const socket = await connectToServer({
-			host: 'localhost',
-			port: SERVER_PORT,
-			clientId: SAMPLE_UUID
-		});
+		const handlers = [chats.addEventListener('connection', () => {})];
+		// https://github.com/mswjs/msw/discussions/1495
+		server.use(...handlers);
+
+		const socket = await connectToServer(TEST_SOCKET_PROPS);
 
 		expect(socket.readyState).toBe(WebSocket.OPEN);
-
-		const REASONABLE_RESOLVE_TIMEOUT_MS = 100;
-		await new Promise((resolve) => setTimeout(resolve, REASONABLE_RESOLVE_TIMEOUT_MS));
 
 		socket.close();
 	});
 
 	it('sends client id in handshake', async () => {
-		const socket = await connectToServer({
-			host: 'localhost',
-			port: SERVER_PORT,
-			clientId: SAMPLE_UUID
-		});
+		const handlers = [
+			chats.addEventListener('connection', ({ client }) => {
+				client.addEventListener('message', (event) => {
+					// https://www.npmjs.com/package/uuid#uuidstringifyarr-offset
+					assert(event.data instanceof Uint8Array);
+					const clientId = uuidStringify(event.data);
+					expect(clientId).toBe(SAMPLE_UUID);
+				});
+			})
+		];
+		server.use(...handlers);
+
+		const socket = await connectToServer(TEST_SOCKET_PROPS);
 
 		expect(socket.readyState).toBe(WebSocket.OPEN);
 
-		// https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
-		const REASONABLE_RESOLVE_TIMEOUT_MS = 100;
-		await new Promise((resolve) => setTimeout(resolve, REASONABLE_RESOLVE_TIMEOUT_MS));
-
-		expect(receivedClientIds).toHaveLength(1);
-		expect(receivedClientIds).toContain(SAMPLE_UUID);
-
 		socket.close();
+	});
+
+	it('when connection is lost, expect socket to be closed', async () => {
+		const CONN_TIMEOUT_MS = 50;
+		const handlers = [
+			chats.addEventListener('connection', async ({ client }) => {
+				setTimeout(() => {
+					client.close(1000, 'connection closed');
+				}, CONN_TIMEOUT_MS);
+			})
+		];
+		server.use(...handlers);
+
+		const socket = await connectToServer(TEST_SOCKET_PROPS);
+
+		await waitFor(100);
+		await expect(socket.readyState).toBe(WebSocket.CLOSED);
 	});
 });

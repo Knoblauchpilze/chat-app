@@ -4,7 +4,8 @@
 		FormField,
 		StyledButton,
 		StyledError,
-		StyledText
+		StyledText,
+		StyledTitle
 	} from '@totocorpsoftwareinc/frontend-toolkit';
 
 	interface Props {
@@ -25,7 +26,7 @@
 		extensible={false}
 		styling="w-full max-w-md rounded-lg p-8 shadow-lg"
 	>
-		<h1 class="text-secondary mb-6 text-center text-3xl font-bold italic">Welcome to Chatterly</h1>
+		<StyledTitle text="Welcome to Chatterly" margins={false} styling="mb-6 text-center" />
 
 		<form method="POST" action="?/register" class="space-y-4">
 			<FormField

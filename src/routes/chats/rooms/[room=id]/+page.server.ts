@@ -11,10 +11,10 @@ import {
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
 import { getRoomsForUser } from '$lib/services/rooms';
 import { RoomResponseDto } from '$lib/communication/api/roomResponseDto';
-import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter.js';
-import { getMessagesForRoom } from '$lib/services/messages.js';
-import { MessageResponseDto } from '$lib/communication/api/messageResponseDto.js';
-import { messageResponseDtoToMessageUiDto } from '$lib/converters/messageConverter.js';
+import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
+import { getMessagesForRoom } from '$lib/services/messages';
+import { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
+import { messageResponseDtoToMessageUiDto } from '$lib/converters/messageConverter';
 
 export async function load({ params, cookies }) {
 	const chatCookies = loadCookiesOrRedirectToLogin(cookies);

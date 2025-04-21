@@ -5,17 +5,6 @@
 
 	let { data } = $props();
 
-	// https://stackoverflow.com/questions/69151604/how-to-access-websocket-in-svelte
-	onMount(() => async () => {
-		// https://stackoverflow.com/questions/74457685/how-do-i-use-net-module-node-js-tcp-client-in-html-browser
-		const props = {
-			clientId: data.user.id
-		};
-		const conn = new Connection(props);
-		const socket = await conn.socket;
-		socket.close();
-	});
-
 	let newMessage = $state('');
 
 	function sendMessage() {

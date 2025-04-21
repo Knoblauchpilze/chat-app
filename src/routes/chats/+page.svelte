@@ -12,14 +12,12 @@
 	import { tcpConnection } from '$lib/stores/connection';
 
 	const UPDATE_INTERVAL_MS = 500;
-	let timeoutId: NodeJS.Timeout;
-	let msElapsed = $state(0);
+	// https://stackoverflow.com/questions/51040703/what-return-type-should-be-used-for-settimeout-in-typescript
+	let timeoutId: ReturnType<typeof setTimeout>;
 	let dots = $state('');
 
 	onMount(() => {
 		timeoutId = setInterval(() => {
-			msElapsed += UPDATE_INTERVAL_MS;
-
 			dots += '.';
 			if (dots.length > 3) {
 				dots = '';

@@ -11,11 +11,13 @@ export function connectToServer(props: ConnectionProps): Promise<WebSocket> {
 		const connectTimeout = props.connectionTimeoutMs ?? DEFAULT_CONNECT_TIMEOUT_MS;
 		const timeoutId = setTimeout(() => {
 			socket.close();
+			console.log('timed out');
 			reject(new Error(`Connection timeout after ${connectTimeout}ms`));
 		}, connectTimeout);
 
 		socket.onopen = () => {
 			clearTimeout(timeoutId);
+			console.log('opened successfully');
 
 			// https://www.npmjs.com/package/uuid#uuidparsestr
 			const dataToSend = uuidParse(props.clientId);
@@ -27,14 +29,13 @@ export function connectToServer(props: ConnectionProps): Promise<WebSocket> {
 
 		socket.onerror = (event) => {
 			clearTimeout(timeoutId);
-			const error = event as ErrorEvent;
-			reject(new Error(error.message));
+			reject(event);
 		};
 
 		socket.onclose = (event) => {
 			clearTimeout(timeoutId);
 			if (!socket.OPEN) {
-				reject(new Error(`WebSocket connection closed: ${event.reason || 'Unknown reason'}`));
+				reject(event);
 			}
 		};
 	});

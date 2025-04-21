@@ -7,7 +7,11 @@ import { HttpStatus } from '@totocorpsoftwareinc/frontend-toolkit';
 export async function load({ data }) {
 	if (data.registered) {
 		if (data.rooms.length > 0) {
-			redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + data.rooms[0].id);
+			// TODO: This leads to an infinite loop with the button on the `/chats` page
+			// to redirect to the home page.
+			// When we can't connect to the server we should probably clear the cookies.
+			// This might mean moving the link to a form action.
+			redirect(HttpStatus.SEE_OTHER, '/chats');
 		}
 
 		error(HttpStatus.NOT_FOUND, 'You are not a member of any room!');

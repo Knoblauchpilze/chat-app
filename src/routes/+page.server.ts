@@ -1,10 +1,10 @@
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
-import { RoomResponseDto } from '$lib/communication/api/roomResponseDto.js';
+import { RoomResponseDto } from '$lib/communication/api/roomResponseDto';
 import { chatUserResponseDtoToChatUserUiDto } from '$lib/converters/chatUserConverter';
 import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
 import { loadChatCookies, resetChatCookies, setChatCookies } from '$lib/cookies';
 import { getErrorMessageFromApiResponse, handleApiError } from '$lib/rest/api';
-import { getRoomsForUser } from '$lib/services/rooms.js';
+import { getRoomsForUser } from '$lib/services/rooms';
 import { createChatUser, getChatUser, listUsersByName } from '$lib/services/users';
 import { fail, redirect } from '@sveltejs/kit';
 import {
@@ -102,27 +102,8 @@ export const actions = {
 			});
 		}
 
-		apiResponse = await getRoomsForUser(chatUserDto.id);
-		if (apiResponse.isError()) {
-			const failure = tryGetFailureReason(apiResponse);
-			const code = getHttpStatusCodeFromApiFailure(failure);
-
-			return fail(code, {
-				message: getErrorMessageFromApiResponse(apiResponse),
-				name: name
-			});
-		}
-
-		const rooms = parseApiResponseAsArray(apiResponse, RoomResponseDto);
-		if (rooms === undefined || rooms.length === 0) {
-			return fail(HttpStatus.NOT_FOUND, {
-				message: "You don't even have a room dude!",
-				name: name
-			});
-		}
-
 		setChatCookies(cookies, chatUserDto);
 
-		redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + rooms[0].id);
+		redirect(HttpStatus.SEE_OTHER, '/chats');
 	}
 };

@@ -12,7 +12,7 @@ export function connectToServer(props: ConnectionProps): Promise<WebSocket> {
 		const connectTimeout = props.connectionTimeoutMs ?? DEFAULT_CONNECT_TIMEOUT_MS;
 		const timeoutId = setTimeout(() => {
 			socket.close();
-			reject(new Error('could not connect to server'));
+			reject(new Error('connection timed out'));
 		}, connectTimeout);
 
 		socket.onopen = () => {

@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
 	import { MessagesArea, MessageInput, RoomsList } from '$lib/components';
+	import { connectToServer } from '$lib/tcp/connect';
 
 	let { data } = $props();
+
+	const connection = $state(connectToServer({ clientId: data.user.id }));
 
 	function onMessageReady(message: string) {
 		console.log('should send message: ', message);
@@ -33,6 +36,15 @@
 		</div>
 
 		<MessagesArea messages={data.messages} chatUserId={data.user.id} />
+		<div class="bg-primary p-2 text-sm">
+			{#await connection}
+				<p class="text-yellow-500">connecting...</p>
+			{:then}
+				<p class="text-right text-green-500">connected</p>
+			{:catch error}
+				<p class="text-red-500">couldn't connect to server: {error.message}</p>
+			{/await}
+		</div>
 		<MessageInput {onMessageReady} />
 	</div>
 </div>

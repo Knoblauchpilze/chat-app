@@ -1,5 +1,6 @@
 import { parse as uuidParse } from 'uuid';
 import { buildTcpUrl, type ConnectionProps } from '$lib/tcp/utils';
+import { analyzeCloseEvent } from '$lib/tcp/analyseCloseEvent';
 
 const DEFAULT_CONNECT_TIMEOUT_MS = 5000;
 
@@ -11,8 +12,7 @@ export function connectToServer(props: ConnectionProps): Promise<WebSocket> {
 		const connectTimeout = props.connectionTimeoutMs ?? DEFAULT_CONNECT_TIMEOUT_MS;
 		const timeoutId = setTimeout(() => {
 			socket.close();
-			console.log('timed out');
-			reject(new Error(`Connection timeout after ${connectTimeout}ms`));
+			reject(new Error('could not connect to server'));
 		}, connectTimeout);
 
 		socket.onopen = () => {
@@ -27,15 +27,18 @@ export function connectToServer(props: ConnectionProps): Promise<WebSocket> {
 			resolve(socket);
 		};
 
+		// TODO: We could send something from the server to indicate that the connection
+		// is accepted.
+
 		socket.onerror = (event) => {
 			clearTimeout(timeoutId);
-			reject(event);
+			console.log('error event: ', event);
 		};
 
 		socket.onclose = (event) => {
 			clearTimeout(timeoutId);
-			if (!socket.OPEN) {
-				reject(event);
+			if (socket.readyState !== socket.OPEN) {
+				reject(analyzeCloseEvent(event));
 			}
 		};
 	});

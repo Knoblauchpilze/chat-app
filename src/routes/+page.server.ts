@@ -102,8 +102,32 @@ export const actions = {
 			});
 		}
 
+		apiResponse = await getRoomsForUser(chatUserDto.id);
+
+		if (apiResponse.isError()) {
+			const failure = tryGetFailureReason(apiResponse);
+
+			const code = getHttpStatusCodeFromApiFailure(failure);
+
+			return fail(code, {
+				message: getErrorMessageFromApiResponse(apiResponse),
+
+				name: name
+			});
+		}
+
+		const rooms = parseApiResponseAsArray(apiResponse, RoomResponseDto);
+
+		if (rooms === undefined || rooms.length === 0) {
+			return fail(HttpStatus.NOT_FOUND, {
+				message: "You don't even have a room dude!",
+
+				name: name
+			});
+		}
+
 		setChatCookies(cookies, chatUserDto);
 
-		redirect(HttpStatus.SEE_OTHER, '/chats');
+		redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + rooms[0].id);
 	}
 };

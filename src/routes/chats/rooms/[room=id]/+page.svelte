@@ -3,6 +3,10 @@
 	import { MessagesArea, MessageInput, RoomsList } from '$lib/components';
 
 	let { data } = $props();
+
+	function onMessageReady(message: string) {
+		console.log('should send message: ', message);
+	}
 </script>
 
 <div class="flex h-screen w-full overflow-hidden">
@@ -29,6 +33,6 @@
 		</div>
 
 		<MessagesArea messages={data.messages} chatUserId={data.user.id} />
-		<MessageInput />
+		<MessageInput {onMessageReady} />
 	</div>
 </div>

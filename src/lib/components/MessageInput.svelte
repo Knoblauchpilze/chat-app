@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { StyledText } from '@totocorpsoftwareinc/frontend-toolkit';
 
+	interface Props {
+		onMessageReady: (message: string) => void;
+	}
+
+	let props: Props = $props();
+
 	let newMessage = $state('');
 
 	function sendMessage() {
 		if (newMessage.trim()) {
-			// In a real app, you would send this to your backend
-			console.log('Sending message:', newMessage);
+			props.onMessageReady(newMessage);
 			newMessage = '';
 		}
 	}

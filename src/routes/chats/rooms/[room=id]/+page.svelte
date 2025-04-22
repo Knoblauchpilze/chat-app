@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { RoomsList } from '$lib/components';
+	import MessagesArea from '$lib/components/MessagesArea.svelte';
 	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
 
 	let { data } = $props();
@@ -45,24 +46,7 @@
 			<StyledTitle text="General" textSize="text-lg" />
 		</div>
 
-		<!-- Messages area -->
-		<div class="flex-1 space-y-4 overflow-y-auto p-4">
-			{#each data.messages as message (message.id)}
-				<div class="flex flex-col {message.user === data.user.id ? 'items-end' : 'items-start'}">
-					<div
-						class="max-w-[70%] rounded-lg px-4 py-2 {message.user === data.user.id
-							? 'bg-secondary rounded-tr-none text-white'
-							: 'bg-primary-hover rounded-tl-none'}"
-					>
-						{#if message.user !== data.user.id}
-							<div class="text-secondary-hover text-sm font-semibold">{message.user}</div>
-						{/if}
-						<div>{message.message}</div>
-						<div class="mt-1 text-right text-xs opacity-70">{message.createdAt}</div>
-					</div>
-				</div>
-			{/each}
-		</div>
+		<MessagesArea messages={data.messages} chatUserId={data.user.id} />
 
 		<!-- Message input -->
 		<div class="border-primary-hover bg-primary border-t p-4">

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { RoomsList } from '$lib/components';
 	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
 
 	let { data } = $props();
@@ -34,21 +35,7 @@
 			</div>
 		</div>
 
-		<div class="p-2">
-			<StyledText text="Rooms" styling="text-secondary text-sm font-semibold mb-2" />
-			<ul>
-				{#each data.rooms as room (room.id)}
-					<li class="mb-1">
-						<a
-							class="hover:bg-primary-hover text-secondary flex w-full items-center justify-between rounded p-2 text-left"
-							href={'/chats/rooms/' + room.id}
-						>
-							{room.name}
-						</a>
-					</li>
-				{/each}
-			</ul>
-		</div>
+		<RoomsList rooms={data.rooms} />
 	</div>
 
 	<!-- Main chat area -->

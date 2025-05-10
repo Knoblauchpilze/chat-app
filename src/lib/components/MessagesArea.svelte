@@ -42,7 +42,9 @@
 						styling="text-sm font-semibold"
 					/>
 				{/if}
-				<div>{message.message}</div>
+				<!-- https://stackoverflow.com/questions/19038070/html-newline-char-in-div-content-editable -->
+				<!-- https://developer.mozilla.org/en-US/docs/Web/CSS/white-space#pre-wrap -->
+				<div class="whitespace-pre-wrap">{message.message}</div>
 				<StyledText
 					text={message.createdAt}
 					textColor="text-black"

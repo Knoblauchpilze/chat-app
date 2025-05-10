@@ -9,7 +9,7 @@ import {
 	parseApiResponseAsSingleValue
 } from '@totocorpsoftwareinc/frontend-toolkit';
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
-import { getRoomsForUser } from '$lib/services/rooms';
+import { getRoomsForUser, getUsersForRoom } from '$lib/services/rooms';
 import { RoomResponseDto } from '$lib/communication/api/roomResponseDto';
 import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
 import { getMessagesForRoom, sendMessage } from '$lib/services/messages';
@@ -46,10 +46,20 @@ export async function load({ params, cookies }) {
 		error(HttpStatus.INTERNAL_SERVER_ERROR, 'Failed to get messages data');
 	}
 
+	// Fetch the users for the current room
+	apiResponse = await getUsersForRoom(params.room);
+	handleApiError(apiResponse);
+
+	const users = parseApiResponseAsArray(apiResponse, ChatUserResponseDto);
+	if (users === undefined) {
+		error(HttpStatus.INTERNAL_SERVER_ERROR, 'Failed to get users data');
+	}
+
 	return {
 		user: chatUserResponseDtoToChatUserUiDto(chatUserDto),
 		rooms: rooms.map((room) => roomResponseDtoToRoomUiDto(room)),
-		messages: messages.map((message) => messageResponseDtoToMessageUiDto(message))
+		messages: messages.map((message) => messageResponseDtoToMessageUiDto(message, users)),
+		users: users.map((user) => chatUserResponseDtoToChatUserUiDto(user))
 	};
 }
 

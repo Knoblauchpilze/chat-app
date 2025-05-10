@@ -1,18 +1,30 @@
 <script lang="ts">
 	import { StyledText } from '@totocorpsoftwareinc/frontend-toolkit';
 
+	let form: HTMLFormElement;
+
 	let newMessage = $state('');
+
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.key === 'Enter' && !event.shiftKey) {
+			event.preventDefault();
+			if (newMessage.trim() !== '') {
+				form.submit();
+			}
+		}
+	}
 </script>
 
 <div class="border-primary-hover bg-primary border-t p-4">
 	<div class="flex">
-		<form method="POST" action="?/send" class="flex w-full">
+		<form bind:this={form} method="POST" action="?/send" class="flex w-full">
 			<textarea
 				id="message"
 				name="message"
 				placeholder="Type a message..."
 				required
 				bind:value={newMessage}
+				onkeydown={handleKeyDown}
 				class="border-primary-hover focus:border-secondary flex-1 resize-none rounded-l-md border bg-white p-2 focus:outline-none"
 				rows="2"
 			></textarea>

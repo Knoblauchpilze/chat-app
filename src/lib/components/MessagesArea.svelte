@@ -17,8 +17,18 @@
 
 	// https://svelte.dev/playground/937a3a035a1f41178714cd7e2e21ca7a?version=5.28.2
 	$effect(() => {
-		messageArea.scroll({ top: messageArea.scrollHeight, behavior: 'smooth' });
+		scrollToBottom(messageArea);
 	});
+
+	$effect(() => {
+		if (messageArea) {
+			scrollToBottom(messageArea);
+		}
+	});
+
+	function scrollToBottom(messageArea: HTMLDivElement) {
+		messageArea.scroll({ top: messageArea.scrollHeight, behavior: 'instant' });
+	}
 </script>
 
 <div bind:this={messageArea} class="flex-1 flex-col-reverse space-y-4 overflow-y-auto p-4">

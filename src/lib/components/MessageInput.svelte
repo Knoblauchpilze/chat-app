@@ -1,44 +1,31 @@
 <script lang="ts">
 	import { StyledText } from '@totocorpsoftwareinc/frontend-toolkit';
 
-	interface Props {
-		onMessageReady: (message: string) => void;
-	}
-
-	let props: Props = $props();
-
 	let newMessage = $state('');
-
-	function sendMessage() {
-		if (newMessage.trim()) {
-			props.onMessageReady(newMessage);
-			newMessage = '';
-		}
-	}
-
-	function handleKeyDown(event: KeyboardEvent) {
-		if (event.key === 'Enter' && !event.shiftKey) {
-			event.preventDefault();
-			sendMessage();
-		}
-	}
 </script>
 
 <div class="border-primary-hover bg-primary border-t p-4">
 	<div class="flex">
-		<textarea
-			bind:value={newMessage}
-			onkeydown={handleKeyDown}
-			placeholder="Type a message..."
-			class="border-primary-hover focus:border-secondary flex-1 resize-none rounded-l-md border bg-white p-2 focus:outline-none"
-			rows="2"
-		></textarea>
-		<button
-			onclick={sendMessage}
-			class="bg-secondary hover:bg-secondary-hover rounded-r-md px-4 text-white"
-		>
-			Send
-		</button>
+		<form method="POST" action="?/send" class="flex w-full">
+			<textarea
+				id="message"
+				name="message"
+				placeholder="Type a message..."
+				required
+				bind:value={newMessage}
+				class="border-primary-hover focus:border-secondary flex-1 resize-none rounded-l-md border bg-white p-2 focus:outline-none"
+				rows="2"
+			></textarea>
+			{#if newMessage !== ''}
+				<button class="bg-secondary hover:bg-secondary-hover h-auto rounded-r-md px-4 text-white">
+					Send
+				</button>
+			{:else}
+				<button disabled class="bg-secondary-hover h-auto rounded-r-md px-4 text-white">
+					Send
+				</button>
+			{/if}
+		</form>
 	</div>
 	<StyledText
 		text="Press Enter to send, Shift+Enter for new line"

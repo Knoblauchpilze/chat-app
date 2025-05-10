@@ -3,10 +3,6 @@
 	import { MessagesArea, MessageInput, RoomsList } from '$lib/components';
 
 	let { data } = $props();
-
-	function onMessageReady(message: string) {
-		console.log('should send message: ', message);
-	}
 </script>
 
 <div class="flex h-screen w-full overflow-hidden">
@@ -42,6 +38,6 @@
 				<p class="text-red-500">couldn't connect to server: {error.message}</p>
 			{/await} -->
 		</div>
-		<MessageInput {onMessageReady} />
+		<MessageInput />
 	</div>
 </div>

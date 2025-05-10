@@ -2,7 +2,7 @@ import { loadCookiesOrRedirectToLogin, resetChatCookies } from '$lib/cookies';
 import { handleApiError } from '$lib/rest/api';
 import { getChatUser } from '$lib/services/users';
 import { chatUserResponseDtoToChatUserUiDto } from '$lib/converters/chatUserConverter';
-import { error, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import {
 	HttpStatus,
 	parseApiResponseAsArray,
@@ -58,5 +58,15 @@ export const actions = {
 		resetChatCookies(cookies);
 
 		redirect(HttpStatus.SEE_OTHER, '/');
+	},
+	send: async ({ request }) => {
+		const data = await request.formData();
+
+		const message = data.get('message');
+		if (!message || message === '') {
+			return fail(HttpStatus.UNPROCESSABLE_ENTITY, {
+				message: 'Please write a non empty message'
+			});
+		}
 	}
 };

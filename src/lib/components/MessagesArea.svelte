@@ -9,11 +9,19 @@
 
 	let props: Props = $props();
 
+	// https://svelte.dev/docs/svelte/bind#bind:this
+	let messageArea: HTMLDivElement;
+
 	const bgColorUserMessage = 'bg-secondary rounded-tr-none text-white';
 	const bgColorOtherMessage = 'bg-primary-hover rounded-tl-none';
+
+	// https://svelte.dev/playground/937a3a035a1f41178714cd7e2e21ca7a?version=5.28.2
+	$effect(() => {
+		messageArea.scroll({ top: messageArea.scrollHeight, behavior: 'smooth' });
+	});
 </script>
 
-<div class="flex-1 space-y-4 overflow-y-auto p-4">
+<div bind:this={messageArea} class="flex-1 flex-col-reverse space-y-4 overflow-y-auto p-4">
 	{#each props.messages as message (message.id)}
 		<div class="flex flex-col {message.user === props.chatUserId ? 'items-end' : 'items-start'}">
 			<div

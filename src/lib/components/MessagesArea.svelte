@@ -17,10 +17,6 @@
 
 	// https://svelte.dev/playground/937a3a035a1f41178714cd7e2e21ca7a?version=5.28.2
 	$effect(() => {
-		scrollToBottom(messageArea);
-	});
-
-	$effect(() => {
 		if (messageArea) {
 			scrollToBottom(messageArea);
 		}

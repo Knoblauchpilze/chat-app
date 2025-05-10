@@ -10,3 +10,13 @@ export async function getRoomsForUser(id: string): Promise<ApiResponse> {
 
 	return safeFetchJson(url, params);
 }
+
+export async function getUsersForRoom(id: string): Promise<ApiResponse> {
+	const url = buildApiUrl('rooms/' + id + '/users');
+
+	const params = {
+		method: 'GET'
+	};
+
+	return safeFetchJson(url, params);
+}

@@ -1,5 +1,5 @@
 import { loadCookiesOrRedirectToLogin, resetChatCookies } from '$lib/cookies';
-import { handleApiError } from '$lib/rest/api';
+import { getErrorMessageFromApiResponse, handleApiError } from '$lib/rest/api';
 import { getChatUser } from '$lib/services/users';
 import { chatUserResponseDtoToChatUserUiDto } from '$lib/converters/chatUserConverter';
 import { error, fail, redirect } from '@sveltejs/kit';
@@ -12,7 +12,7 @@ import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto'
 import { getRoomsForUser } from '$lib/services/rooms';
 import { RoomResponseDto } from '$lib/communication/api/roomResponseDto';
 import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
-import { getMessagesForRoom } from '$lib/services/messages';
+import { getMessagesForRoom, sendMessage } from '$lib/services/messages';
 import { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
 import { messageResponseDtoToMessageUiDto } from '$lib/converters/messageConverter';
 
@@ -59,7 +59,9 @@ export const actions = {
 
 		redirect(HttpStatus.SEE_OTHER, '/');
 	},
-	send: async ({ request }) => {
+	send: async ({ params, cookies, request }) => {
+		const chatCookies = loadCookiesOrRedirectToLogin(cookies);
+
 		const data = await request.formData();
 
 		const message = data.get('message');
@@ -67,6 +69,13 @@ export const actions = {
 			return fail(HttpStatus.UNPROCESSABLE_ENTITY, {
 				message: 'Please write a non empty message'
 			});
+		}
+
+		const apiResponse = await sendMessage(chatCookies.chatUserId, params.room, message as string);
+		if (apiResponse.isError()) {
+			return {
+				message: getErrorMessageFromApiResponse(apiResponse)
+			};
 		}
 	}
 };

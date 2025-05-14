@@ -3,42 +3,37 @@
 	import { MessagesArea, MessageInput, RoomsList } from '$lib/components';
 	import { onDestroy, onMount } from 'svelte';
 	import { ConnectionState } from '$lib/sse/state';
+	import { connectToServer, type Connection } from '$lib/sse/connection';
+	import type { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
 
 	let { data } = $props();
 
-	const url = 'http://localhost:60001/v1/chats/users/' + data.user.id + '/subscribe';
-
-	let connectionState: ConnectionState = $state(ConnectionState.CONNECTING);
-
-	let source: EventSource;
+	let status: ConnectionState = $state(ConnectionState.CONNECTING);
 
 	// https://stackoverflow.com/questions/64921224/how-to-run-server-sent-events-in-svelte-component-in-sapper
-	// TODO: The documentation says this does not need to live inside the component
 	onMount(() => {
-		source = new EventSource(url);
-
-		source.onopen = () => {
-			connectionState = ConnectionState.CONNECTED;
+		const props = {
+			onConnected: () => {
+				status = ConnectionState.CONNECTED;
+			},
+			onMessage: (msg: MessageResponseDto) => {
+				console.log('received message', msg);
+			},
+			onDisconnected: () => {
+				status = ConnectionState.DISCONNECTED;
+			}
 		};
 
-		source.onerror = () => {
-			connectionState = ConnectionState.DISCONNECTED;
-		};
-
-		source.onmessage = (event) => {
-			const message = JSON.parse(event.data);
-			console.log('message received', message);
-			data.messages.push(message);
-		};
+		const conn = connectToServer(data.user.id, props);
 
 		// https://stackoverflow.com/questions/61058835/close-an-event-source-sse-on-page-reload
 		window.onbeforeunload = () => {
-			source.close();
+			conn.source.close();
 		};
 
 		// https://svelte.dev/docs/svelte/lifecycle-hooks
 		return () => {
-			source.close();
+			conn.source.close();
 		};
 	});
 </script>
@@ -68,9 +63,9 @@
 
 		<MessagesArea messages={data.messages} chatUserId={data.user.id} />
 		<div class="bg-primary p-2 text-sm">
-			{#if connectionState === ConnectionState.CONNECTING}
+			{#if status === ConnectionState.CONNECTING}
 				<p class="text-yellow-500">connecting...</p>
-			{:else if connectionState === ConnectionState.CONNECTED}
+			{:else if status === ConnectionState.CONNECTED}
 				<p class="text-right text-green-500">connected</p>
 			{:else}
 				<p class="text-red-500">couldn't connect to server</p>

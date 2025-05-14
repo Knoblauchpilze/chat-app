@@ -17,6 +17,9 @@
 
 	// https://svelte.dev/playground/937a3a035a1f41178714cd7e2e21ca7a?version=5.28.2
 	$effect(() => {
+		// https://svelte.dev/docs/svelte/lifecycle-hooks#Deprecated:-beforeUpdate-afterUpdate-Chat-window-example
+		// https://stackoverflow.com/questions/27732209/turning-off-eslint-rule-for-a-specific-line
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		props.messages;
 
 		if (messageArea) {

@@ -3,7 +3,7 @@ import { buildApiUrl } from '$lib/rest/api';
 
 export interface ConnectionProps {
 	onConnected: () => void;
-	onMessage: (msg: MessageResponseDto) => void;
+	onMessageReceived: (msg: MessageResponseDto) => void;
 	onDisconnected: () => void;
 }
 
@@ -25,8 +25,9 @@ export function connectToServer(userId: string, props: ConnectionProps): Connect
 	};
 
 	source.onmessage = (event) => {
-		const msg = new MessageResponseDto(event.data);
-		props.onMessage(msg);
+		const rawMsg = JSON.parse(event.data);
+		const msg = new MessageResponseDto(rawMsg);
+		props.onMessageReceived(msg);
 	};
 
 	return {

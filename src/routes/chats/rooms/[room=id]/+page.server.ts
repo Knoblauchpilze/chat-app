@@ -1,8 +1,8 @@
 import { loadCookiesOrRedirectToLogin, resetChatCookies } from '$lib/cookies';
-import { getErrorMessageFromApiResponse, handleApiError } from '$lib/rest/api';
+import { handleApiError } from '$lib/rest/api';
 import { getChatUser } from '$lib/services/users';
 import { chatUserResponseDtoToChatUserUiDto } from '$lib/converters/chatUserConverter';
-import { error, fail, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import {
 	HttpStatus,
 	parseApiResponseAsArray,
@@ -12,7 +12,7 @@ import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto'
 import { getRoomsForUser, getUsersForRoom } from '$lib/services/rooms';
 import { RoomResponseDto } from '$lib/communication/api/roomResponseDto';
 import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
-import { getMessagesForRoom, sendMessage } from '$lib/services/messages';
+import { getMessagesForRoom } from '$lib/services/messages';
 import { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
 import { messageResponseDtoToMessageUiDto } from '$lib/converters/messageConverter';
 
@@ -57,6 +57,7 @@ export async function load({ params, cookies }) {
 
 	return {
 		user: chatUserResponseDtoToChatUserUiDto(chatUserDto),
+		room: params.room,
 		rooms: rooms.map((room) => roomResponseDtoToRoomUiDto(room, room.id === params.room)),
 		messages: messages.map((message) => messageResponseDtoToMessageUiDto(message, users)),
 		users: users.map((user) => chatUserResponseDtoToChatUserUiDto(user))
@@ -68,24 +69,5 @@ export const actions = {
 		resetChatCookies(cookies);
 
 		redirect(HttpStatus.SEE_OTHER, '/');
-	},
-	send: async ({ params, cookies, request }) => {
-		const chatCookies = loadCookiesOrRedirectToLogin(cookies);
-
-		const data = await request.formData();
-
-		const message = data.get('message');
-		if (!message || message === '') {
-			return fail(HttpStatus.UNPROCESSABLE_ENTITY, {
-				message: 'Please write a non empty message'
-			});
-		}
-
-		const apiResponse = await sendMessage(chatCookies.chatUserId, params.room, message as string);
-		if (apiResponse.isError()) {
-			return {
-				message: getErrorMessageFromApiResponse(apiResponse)
-			};
-		}
 	}
 };

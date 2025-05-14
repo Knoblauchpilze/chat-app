@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
 	import { MessagesArea, MessageInput, RoomsList } from '$lib/components';
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { ConnectionState } from '$lib/sse/state';
-	import { connectToServer, type Connection } from '$lib/sse/connection';
+	import { connectToServer } from '$lib/sse/connection';
 	import type { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
+	import { sendMessage } from '$lib/services/messages';
 
 	let { data } = $props();
 
@@ -13,15 +14,11 @@
 	// https://stackoverflow.com/questions/64921224/how-to-run-server-sent-events-in-svelte-component-in-sapper
 	onMount(() => {
 		const props = {
-			onConnected: () => {
-				status = ConnectionState.CONNECTED;
-			},
-			onMessage: (msg: MessageResponseDto) => {
+			onConnected: () => (status = ConnectionState.CONNECTED),
+			onMessageReceived: (msg: MessageResponseDto) => {
 				console.log('received message', msg);
 			},
-			onDisconnected: () => {
-				status = ConnectionState.DISCONNECTED;
-			}
+			onDisconnected: () => (status = ConnectionState.DISCONNECTED)
 		};
 
 		const conn = connectToServer(data.user.id, props);
@@ -36,6 +33,16 @@
 			conn.source.close();
 		};
 	});
+
+	function onMessageRequest(message: string): boolean {
+		// Given the way the safeFetch is implemented in the frontend-toolkit,
+		// we should always get a valid API response. It might be an error
+		// response.
+		sendMessage(data.user.id, data.room, message).then((response) => {
+			console.log('response:', response);
+		});
+		return true;
+	}
 </script>
 
 <div class="flex h-screen w-full overflow-hidden">
@@ -62,15 +69,15 @@
 		</div>
 
 		<MessagesArea messages={data.messages} chatUserId={data.user.id} />
-		<div class="bg-primary p-2 text-sm">
+		<div class="bg-primary p-2 text-right text-sm">
 			{#if status === ConnectionState.CONNECTING}
 				<p class="text-yellow-500">connecting...</p>
 			{:else if status === ConnectionState.CONNECTED}
-				<p class="text-right text-green-500">connected</p>
+				<p class="text-green-500">connected</p>
 			{:else}
 				<p class="text-red-500">couldn't connect to server</p>
 			{/if}
 		</div>
-		<MessageInput />
+		<MessageInput {onMessageRequest} />
 	</div>
 </div>

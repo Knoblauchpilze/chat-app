@@ -11,9 +11,6 @@ export default defineConfig({
 			reporter: ['json'],
 			include: ['src/**/*.{js,ts,svelte}'],
 			exclude: ['**/index.ts', 'tests/**/*.{js,ts}']
-		},
-
-		// https://github.com/vitest-dev/vitest/issues/3328
-		setupFiles: ['./tests/setup.js']
+		}
 	}
 });

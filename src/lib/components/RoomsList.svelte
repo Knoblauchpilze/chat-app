@@ -14,12 +14,21 @@
 	<ul>
 		{#each props.rooms as room (room.id)}
 			<li class="mb-1">
-				<a
-					class="hover:bg-primary-hover text-secondary flex w-full items-center justify-between rounded p-2 text-left"
-					href={'/chats/rooms/' + room.id}
-				>
-					{room.name}
-				</a>
+				{#if room.selected}
+					<a
+						class="bg-primary-hover text-secondary flex w-full items-center justify-between rounded p-2 text-left"
+						href={'/chats/rooms/' + room.id}
+					>
+						{room.name}
+					</a>
+				{:else}
+					<a
+						class="hover:bg-primary-hover text-secondary flex w-full items-center justify-between rounded p-2 text-left"
+						href={'/chats/rooms/' + room.id}
+					>
+						{room.name}
+					</a>
+				{/if}
 			</li>
 		{/each}
 	</ul>

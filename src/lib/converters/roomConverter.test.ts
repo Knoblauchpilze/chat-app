@@ -11,19 +11,28 @@ const SAMPLE_ROOM_RESPONSE = {
 describe.concurrent('Converting API response to UI DTO', () => {
 	it('should preserve identifier', () => {
 		const inputDto = new RoomResponseDto(SAMPLE_ROOM_RESPONSE);
-		const actual = roomResponseDtoToRoomUiDto(inputDto);
+		const actual = roomResponseDtoToRoomUiDto(inputDto, false);
 		expect(actual.id).toBe(SAMPLE_ROOM_RESPONSE.id);
 	});
 
 	it('should preserve name', () => {
 		const inputDto = new RoomResponseDto(SAMPLE_ROOM_RESPONSE);
-		const actual = roomResponseDtoToRoomUiDto(inputDto);
+		const actual = roomResponseDtoToRoomUiDto(inputDto, false);
 		expect(actual.name).toBe(SAMPLE_ROOM_RESPONSE.name);
 	});
 
 	it('should preserve creation date', () => {
 		const inputDto = new RoomResponseDto(SAMPLE_ROOM_RESPONSE);
-		const actual = roomResponseDtoToRoomUiDto(inputDto);
+		const actual = roomResponseDtoToRoomUiDto(inputDto, false);
 		expect(actual.createdAt).toBe('January 6, 2025 at 14:56:33');
+	});
+
+	it('respects selected status', () => {
+		const inputDto = new RoomResponseDto(SAMPLE_ROOM_RESPONSE);
+		let actual = roomResponseDtoToRoomUiDto(inputDto, false);
+		expect(actual.selected).toBe(false);
+
+		actual = roomResponseDtoToRoomUiDto(inputDto, true);
+		expect(actual.selected).toBe(true);
 	});
 });

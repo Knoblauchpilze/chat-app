@@ -58,7 +58,7 @@ export async function load({ params, cookies }) {
 	return {
 		user: chatUserResponseDtoToChatUserUiDto(chatUserDto),
 		room: params.room,
-		rooms: rooms.map((room) => roomResponseDtoToRoomUiDto(room, room.id === params.room)),
+		rooms: rooms.map((room) => roomResponseDtoToRoomUiDto(room)),
 		messages: messages.map((message) => messageResponseDtoToMessageUiDto(message, users)),
 		users: users.map((user) => chatUserResponseDtoToChatUserUiDto(user))
 	};

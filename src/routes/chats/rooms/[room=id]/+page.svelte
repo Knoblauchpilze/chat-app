@@ -7,6 +7,7 @@
 	import { sendMessage } from '$lib/services/messages';
 	import { getErrorMessageFromApiResponse } from '$lib/rest/api';
 	import { messageResponseDtoToMessageUiDtoFromUiUser } from '$lib/converters/messageConverter';
+	import type { RoomUiProps } from '$lib/communication/ui/roomUiProps';
 
 	let { data } = $props();
 
@@ -19,7 +20,14 @@
 
 	let statusMessage: string = $state('connecting...');
 	let statusTextColor: string = $state(STATUS_TEXT_COLORS.CONNECTING);
+
 	let messages = $derived(data.messages);
+
+	let rooms: RoomUiProps[] = $state(
+		data.rooms.map((room) => {
+			return { room: room, unreadMessages: 0 };
+		})
+	);
 
 	// https://stackoverflow.com/questions/64921224/how-to-run-server-sent-events-in-svelte-component-in-sapper
 	onMount(() => {
@@ -30,6 +38,11 @@
 			},
 			onMessageReceived: (inMsg: MessageResponseDto) => {
 				if (inMsg.room !== data.room) {
+					const id = rooms.findIndex((room) => room.room.id === inMsg.room);
+					if (id !== -1) {
+						rooms[id].unreadMessages++;
+					}
+
 					return;
 				}
 
@@ -76,6 +89,9 @@
 	<!-- Sidebar with rooms -->
 	<div class="bg-primary border-primary-hover w-64 overflow-y-auto border-r">
 		<div class="border-primary-hover border-b p-4">
+			{#each rooms as pp}
+				<p class="text-white">{pp.unreadMessages}</p>
+			{/each}
 			<StyledTitle text="Chatterly" textSize="text-xl" />
 			<div class="mt-2 flex items-center justify-between">
 				<StyledText text={`Hello, ${data.user.name}`} styling="text-sm" />
@@ -85,7 +101,7 @@
 			</div>
 		</div>
 
-		<RoomsList rooms={data.rooms} />
+		<RoomsList currentRoom={data.room} {rooms} />
 	</div>
 
 	<!-- Main chat area -->

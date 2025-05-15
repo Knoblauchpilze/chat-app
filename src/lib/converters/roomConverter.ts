@@ -7,6 +7,7 @@ export function roomResponseDtoToRoomUiDto(apiDto: RoomResponseDto, selected: bo
 		id: apiDto.id,
 		name: apiDto.name,
 		createdAt: formatDate(apiDto.createdAt),
-		selected: selected
+		selected: selected,
+		unreadMessages: 0
 	};
 }

@@ -6,6 +6,7 @@
 	import type { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
 	import { sendMessage } from '$lib/services/messages';
 	import { getErrorMessageFromApiResponse } from '$lib/rest/api';
+	import { messageResponseDtoToMessageUiDtoFromUiUser } from '$lib/converters/messageConverter';
 
 	let { data } = $props();
 
@@ -18,6 +19,7 @@
 
 	let statusMessage: string = $state('connecting...');
 	let statusTextColor: string = $state(STATUS_TEXT_COLORS.CONNECTING);
+	let messages = $derived(data.messages);
 
 	// https://stackoverflow.com/questions/64921224/how-to-run-server-sent-events-in-svelte-component-in-sapper
 	onMount(() => {
@@ -26,8 +28,9 @@
 				statusTextColor = STATUS_TEXT_COLORS.CONNECTED;
 				statusMessage = 'connected';
 			},
-			onMessageReceived: (msg: MessageResponseDto) => {
-				console.log('received message', msg);
+			onMessageReceived: (inMsg: MessageResponseDto) => {
+				const msg = messageResponseDtoToMessageUiDtoFromUiUser(inMsg, data.users);
+				messages = [...messages, msg];
 			},
 			onDisconnected: () => {
 				statusTextColor = STATUS_TEXT_COLORS.DISCONNECTED;
@@ -88,7 +91,7 @@
 			<StyledTitle text="Generals" textSize="text-lg" />
 		</div>
 
-		<MessagesArea messages={data.messages} chatUserId={data.user.id} />
+		<MessagesArea {messages} chatUserId={data.user.id} />
 		<div class="bg-primary p-2 text-right text-sm">
 			<p class={statusTextColor}>{statusMessage}</p>
 		</div>

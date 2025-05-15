@@ -2,23 +2,37 @@
 	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
 	import { MessagesArea, MessageInput, RoomsList } from '$lib/components';
 	import { onMount } from 'svelte';
-	import { ConnectionState } from '$lib/sse/state';
 	import { connectToServer } from '$lib/sse/connection';
 	import type { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
 	import { sendMessage } from '$lib/services/messages';
+	import { getErrorMessageFromApiResponse } from '$lib/rest/api';
 
 	let { data } = $props();
 
-	let status: ConnectionState = $state(ConnectionState.CONNECTING);
+	const STATUS_TEXT_COLORS = {
+		CONNECTED: 'text-green-500',
+		CONNECTING: 'text-yellow-500',
+		DISCONNECTED: 'text-red-500',
+		ERROR: 'text-orange-500'
+	};
+
+	let statusMessage: string = $state('connecting...');
+	let statusTextColor: string = $state(STATUS_TEXT_COLORS.CONNECTING);
 
 	// https://stackoverflow.com/questions/64921224/how-to-run-server-sent-events-in-svelte-component-in-sapper
 	onMount(() => {
 		const props = {
-			onConnected: () => (status = ConnectionState.CONNECTED),
+			onConnected: () => {
+				statusTextColor = STATUS_TEXT_COLORS.CONNECTED;
+				statusMessage = 'connected';
+			},
 			onMessageReceived: (msg: MessageResponseDto) => {
 				console.log('received message', msg);
 			},
-			onDisconnected: () => (status = ConnectionState.DISCONNECTED)
+			onDisconnected: () => {
+				statusTextColor = STATUS_TEXT_COLORS.DISCONNECTED;
+				statusMessage = "couldn't connect to server";
+			}
 		};
 
 		const conn = connectToServer(data.user.id, props);
@@ -39,7 +53,13 @@
 		// we should always get a valid API response. It might be an error
 		// response.
 		sendMessage(data.user.id, data.room, message).then((response) => {
-			console.log('response:', response);
+			if (response.is2xxOk()) {
+				statusTextColor = STATUS_TEXT_COLORS.CONNECTED;
+				statusMessage = 'connected';
+			} else {
+				statusTextColor = STATUS_TEXT_COLORS.ERROR;
+				statusMessage = getErrorMessageFromApiResponse(response);
+			}
 		});
 		return true;
 	}
@@ -70,13 +90,7 @@
 
 		<MessagesArea messages={data.messages} chatUserId={data.user.id} />
 		<div class="bg-primary p-2 text-right text-sm">
-			{#if status === ConnectionState.CONNECTING}
-				<p class="text-yellow-500">connecting...</p>
-			{:else if status === ConnectionState.CONNECTED}
-				<p class="text-green-500">connected</p>
-			{:else}
-				<p class="text-red-500">couldn't connect to server</p>
-			{/if}
+			<p class={statusTextColor}>{statusMessage}</p>
 		</div>
 		<MessageInput {onMessageRequest} />
 	</div>

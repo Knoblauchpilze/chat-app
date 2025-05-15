@@ -35,4 +35,10 @@ describe.concurrent('Converting API response to UI DTO', () => {
 		actual = roomResponseDtoToRoomUiDto(inputDto, true);
 		expect(actual.selected).toBe(true);
 	});
+
+	it('should assign 0 unread messages', () => {
+		const inputDto = new RoomResponseDto(SAMPLE_ROOM_RESPONSE);
+		const actual = roomResponseDtoToRoomUiDto(inputDto, false);
+		expect(actual.unreadMessages).toBe(0);
+	});
 });

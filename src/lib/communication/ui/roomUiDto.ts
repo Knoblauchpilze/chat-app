@@ -3,4 +3,5 @@ export interface RoomUiDto {
 	readonly name: string;
 	readonly createdAt: string;
 	readonly selected: boolean;
+	unreadMessages: number;
 }

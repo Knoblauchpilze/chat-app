@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { type MessageUiDto } from '$lib/communication/ui/messageUiDto';
 	import { StyledText } from '@totocorpsoftwareinc/frontend-toolkit';
+	import { tick } from 'svelte';
 
 	interface Props {
 		messages: MessageUiDto[];
@@ -15,21 +16,45 @@
 	const bgColorUserMessage = 'bg-secondary rounded-tr-none text-white';
 	const bgColorOtherMessage = 'bg-primary-hover rounded-tl-none';
 
+	let firstScroll = true;
+
 	// https://svelte.dev/playground/937a3a035a1f41178714cd7e2e21ca7a?version=5.28.2
-	$effect(() => {
+	$effect.pre(() => {
 		// https://svelte.dev/docs/svelte/lifecycle-hooks#Deprecated:-beforeUpdate-afterUpdate-Chat-window-example
 		// https://stackoverflow.com/questions/27732209/turning-off-eslint-rule-for-a-specific-line
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		props.messages;
 
-		if (messageArea) {
-			scrollToBottom(messageArea);
+		if (!messageArea) {
+			return;
+		}
+
+		const thresholdForAreaBottomInPixels = 50;
+
+		const limitToBeAtTheBottom = messageArea.scrollHeight - thresholdForAreaBottomInPixels;
+		const currentBottomPosition = messageArea.offsetHeight + messageArea.scrollTop;
+
+		const autoscroll = currentBottomPosition > limitToBeAtTheBottom;
+
+		if (autoscroll) {
+			tick().then(() => {
+				messageArea.scroll({ top: messageArea.scrollHeight, behavior: 'smooth' });
+			});
 		}
 	});
 
-	function scrollToBottom(messageArea: HTMLDivElement) {
-		messageArea.scroll({ top: messageArea.scrollHeight, behavior: 'instant' });
-	}
+	$effect(() => {
+		if (!messageArea) {
+			return;
+		}
+
+		if (firstScroll) {
+			firstScroll = false;
+			tick().then(() => {
+				messageArea.scroll({ top: messageArea.scrollHeight, behavior: 'instant' });
+			});
+		}
+	});
 </script>
 
 <div bind:this={messageArea} class="flex-1 flex-col-reverse space-y-4 overflow-y-auto p-4">

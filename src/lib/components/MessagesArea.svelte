@@ -37,6 +37,7 @@
 		const autoscroll = currentBottomPosition > limitToBeAtTheBottom;
 
 		if (autoscroll) {
+			// TODO: Maybe make the behavior instant if the scroll is too big.
 			tick().then(() => {
 				messageArea.scroll({ top: messageArea.scrollHeight, behavior: 'smooth' });
 			});

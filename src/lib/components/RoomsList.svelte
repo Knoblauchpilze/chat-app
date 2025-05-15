@@ -13,7 +13,7 @@
 <div class="p-2">
 	<StyledText text="Rooms" styling="text-secondary text-sm font-semibold mb-2" />
 	<ul>
-		{#each rooms as room, id (room.room.id)}
+		{#each rooms as room (room.room.id)}
 			<li class="mb-1">
 				{#if room.room.id === currentRoom}
 					<a

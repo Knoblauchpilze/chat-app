@@ -89,9 +89,6 @@
 	<!-- Sidebar with rooms -->
 	<div class="bg-primary border-primary-hover w-64 overflow-y-auto border-r">
 		<div class="border-primary-hover border-b p-4">
-			{#each rooms as pp}
-				<p class="text-white">{pp.unreadMessages}</p>
-			{/each}
 			<StyledTitle text="Chatterly" textSize="text-xl" />
 			<div class="mt-2 flex items-center justify-between">
 				<StyledText text={`Hello, ${data.user.name}`} styling="text-sm" />

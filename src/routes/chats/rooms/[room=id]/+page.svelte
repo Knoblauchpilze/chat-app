@@ -29,6 +29,10 @@
 				statusMessage = 'connected';
 			},
 			onMessageReceived: (inMsg: MessageResponseDto) => {
+				if (inMsg.room !== data.room) {
+					return;
+				}
+
 				const msg = messageResponseDtoToMessageUiDtoFromUiUser(inMsg, data.users);
 				messages = [...messages, msg];
 			},

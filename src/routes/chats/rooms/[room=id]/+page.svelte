@@ -8,6 +8,7 @@
 	import { getErrorMessageFromApiResponse } from '$lib/rest/api';
 	import { messageResponseDtoToMessageUiDtoFromUiUser } from '$lib/converters/messageConverter';
 	import type { RoomUiProps } from '$lib/communication/ui/roomUiProps';
+	import { afterNavigate } from '$app/navigation';
 
 	let { data } = $props();
 
@@ -22,12 +23,8 @@
 	let statusTextColor: string = $state(STATUS_TEXT_COLORS.CONNECTING);
 
 	let messages = $derived(data.messages);
-
-	let rooms: RoomUiProps[] = $state(
-		data.rooms.map((room) => {
-			return { room: room, unreadMessages: 0 };
-		})
-	);
+	let rooms = $derived(data.rooms);
+	let roomProps: RoomUiProps[] = $state([]);
 
 	// https://stackoverflow.com/questions/64921224/how-to-run-server-sent-events-in-svelte-component-in-sapper
 	onMount(() => {
@@ -36,19 +33,7 @@
 				statusTextColor = STATUS_TEXT_COLORS.CONNECTED;
 				statusMessage = 'connected';
 			},
-			onMessageReceived: (inMsg: MessageResponseDto) => {
-				if (inMsg.room !== data.room) {
-					const id = rooms.findIndex((room) => room.room.id === inMsg.room);
-					if (id !== -1) {
-						rooms[id].unreadMessages++;
-					}
-
-					return;
-				}
-
-				const msg = messageResponseDtoToMessageUiDtoFromUiUser(inMsg, data.users);
-				messages = [...messages, msg];
-			},
+			onMessageReceived: onMessageReceived,
 			onDisconnected: () => {
 				statusTextColor = STATUS_TEXT_COLORS.DISCONNECTED;
 				statusMessage = "couldn't connect to server";
@@ -68,6 +53,14 @@
 		};
 	});
 
+	// https://svelte.dev/docs/kit/state-management#Component-and-page-state-is-preserved
+	afterNavigate(() => {
+		const id = roomProps.findIndex((prop) => prop.room === data.room);
+		if (id !== -1) {
+			roomProps[id].unreadMessages = 0;
+		}
+	});
+
 	function onMessageRequest(message: string): boolean {
 		// Given the way the safeFetch is implemented in the frontend-toolkit,
 		// we should always get a valid API response. It might be an error
@@ -82,6 +75,25 @@
 			}
 		});
 		return true;
+	}
+
+	function onMessageReceived(inMsg: MessageResponseDto) {
+		if (inMsg.room !== data.room) {
+			updateUnreadMessages(inMsg.room);
+			return;
+		}
+
+		const msg = messageResponseDtoToMessageUiDtoFromUiUser(inMsg, data.users);
+		messages = [...messages, msg];
+	}
+
+	function updateUnreadMessages(roomId: string) {
+		const id = roomProps.findIndex((prop) => prop.room === roomId);
+		if (id === -1) {
+			roomProps.push({ room: roomId, unreadMessages: 1 });
+		} else {
+			roomProps[id].unreadMessages++;
+		}
 	}
 </script>
 
@@ -98,7 +110,7 @@
 			</div>
 		</div>
 
-		<RoomsList currentRoom={data.room} {rooms} />
+		<RoomsList currentRoom={data.room} {rooms} {roomProps} />
 	</div>
 
 	<!-- Main chat area -->

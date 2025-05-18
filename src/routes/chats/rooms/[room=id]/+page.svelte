@@ -23,8 +23,8 @@
 	let statusTextColor: string = $state(STATUS_TEXT_COLORS.CONNECTING);
 
 	let messages = $derived(data.messages);
-	let rooms = $derived(data.rooms);
-	let roomProps: RoomUiProps[] = $state([]);
+	let userRooms = $derived(data.userRooms);
+	let userRoomProps: RoomUiProps[] = $state([]);
 
 	// https://stackoverflow.com/questions/64921224/how-to-run-server-sent-events-in-svelte-component-in-sapper
 	onMount(() => {
@@ -55,9 +55,9 @@
 
 	// https://svelte.dev/docs/kit/state-management#Component-and-page-state-is-preserved
 	afterNavigate(() => {
-		const id = roomProps.findIndex((prop) => prop.room === data.room);
+		const id = userRoomProps.findIndex((prop) => prop.room === data.room);
 		if (id !== -1) {
-			roomProps[id].unreadMessages = 0;
+			userRoomProps[id].unreadMessages = 0;
 		}
 	});
 
@@ -88,11 +88,11 @@
 	}
 
 	function updateUnreadMessages(roomId: string) {
-		const id = roomProps.findIndex((prop) => prop.room === roomId);
+		const id = userRoomProps.findIndex((prop) => prop.room === roomId);
 		if (id === -1) {
-			roomProps.push({ room: roomId, unreadMessages: 1 });
+			userRoomProps.push({ room: roomId, unreadMessages: 1 });
 		} else {
-			roomProps[id].unreadMessages++;
+			userRoomProps[id].unreadMessages++;
 		}
 	}
 </script>
@@ -110,7 +110,7 @@
 			</div>
 		</div>
 
-		<RoomsList currentRoom={data.room} {rooms} {roomProps} />
+		<RoomsList currentRoom={data.room} {userRooms} {userRoomProps} />
 	</div>
 
 	<!-- Main chat area -->

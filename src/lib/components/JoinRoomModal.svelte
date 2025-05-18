@@ -36,6 +36,13 @@
 		onClose();
 	}
 
+	function handleCloseFromKeyboard(event: KeyboardEvent) {
+		console.log('key pressed', event.key);
+		if (event.key === 'Escape') {
+			handleClose();
+		}
+	}
+
 	function resetModal() {
 		searchTerm = '';
 		selectedRoomId = null;
@@ -48,8 +55,14 @@
 </script>
 
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-	<!-- Semi-transparent backdrop that allows content to be visible -->
-	<div class="bg-opacity-40 absolute inset-0 backdrop-blur-sm" onclick={handleClose}></div>
+	<div
+		class="bg-opacity-40 absolute inset-0 backdrop-blur-sm"
+		onclick={handleClose}
+		onkeydown={handleCloseFromKeyboard}
+		role="button"
+		tabindex="0"
+		aria-label="Close modal"
+	></div>
 
 	<div class="bg-primary relative w-full max-w-md overflow-hidden rounded-lg shadow-xl">
 		<div class="border-primary-hover flex items-center justify-between border-b p-4">
@@ -81,7 +94,7 @@
 
 			<div class="border-primary-hover bg-primary mb-4 max-h-60 overflow-y-auto rounded border">
 				{#if filteredRooms.length === 0}
-					<div class="text-secondary-hover py-6 text-center">No rooms match your search</div>
+					<div class="text-secondary-hover py-6 text-center">No rooms match you search</div>
 				{:else}
 					<ul class="divide-primary-hover divide-y">
 						{#each filteredRooms as room (room.id)}

@@ -37,7 +37,6 @@
 	}
 
 	function handleCloseFromKeyboard(event: KeyboardEvent) {
-		console.log('key pressed', event.key);
 		if (event.key === 'Escape') {
 			handleClose();
 		}
@@ -48,7 +47,6 @@
 		selectedRoomId = null;
 	}
 
-	// Reset state when modal is opened
 	$effect(() => {
 		resetModal();
 	});

@@ -1,19 +1,21 @@
 <script lang="ts">
-	import { StyledButton, StyledText } from '@totocorpsoftwareinc/frontend-toolkit';
+	import { StyledText } from '@totocorpsoftwareinc/frontend-toolkit';
 	import type { RoomUiProps } from '$lib/communication/ui/roomUiProps';
 	import type { RoomUiDto } from '$lib/communication/ui/roomUiDto';
+	import { JoinRoomModal } from '$lib/components';
 
 	interface Props {
 		currentRoom: string;
-		rooms: RoomUiDto[];
-		roomProps: RoomUiProps[];
+		userRooms: RoomUiDto[];
+		userRoomProps: RoomUiProps[];
 	}
 
-	let { currentRoom, rooms, roomProps }: Props = $props();
+	let { currentRoom, userRooms, userRoomProps }: Props = $props();
+	let showJoinRoomModal: boolean = $state(false);
 
 	let unread = $derived.by(() => {
-		return rooms.map((room) => {
-			const prop = roomProps.find((prop) => prop.room === room.id);
+		return userRooms.map((room) => {
+			const prop = userRoomProps.find((prop) => prop.room === room.id);
 			if (prop === undefined) {
 				return {
 					room: room.id,
@@ -27,13 +29,21 @@
 			}
 		});
 	});
+
+	function toggleJoinRoomModal() {
+		showJoinRoomModal = !showJoinRoomModal;
+	}
+
+	function onJoin(roomId: string) {
+		console.log('should join', roomId);
+	}
 </script>
 
 <div class="flex flex-grow flex-col justify-between p-2">
 	<div>
 		<StyledText text="Rooms" styling="text-secondary text-sm font-semibold mb-2" />
 		<ul>
-			{#each rooms as room, id (room.id)}
+			{#each userRooms as room, id (room.id)}
 				<li class="mb-1">
 					{#if room.id === currentRoom}
 						<a
@@ -66,6 +76,10 @@
 
 	<button
 		class="bg-secondary hover:bg-secondary-hover rounded-md px-4 py-2 text-sm font-medium text-white"
-		>Join a new room...</button
+		onclick={toggleJoinRoomModal}>Join a new room...</button
 	>
 </div>
+
+{#if showJoinRoomModal}
+	<JoinRoomModal rooms={userRooms} onClose={toggleJoinRoomModal} {onJoin} />
+{/if}

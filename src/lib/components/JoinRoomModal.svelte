@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { RoomUiDto } from '$lib/communication/ui/roomUiDto';
 	import { StyledButton, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
+	import { CloseSign, SearchIcon, TickedSign } from '$lib/components';
 
 	interface Props {
 		rooms: RoomUiDto[];
@@ -59,20 +60,7 @@
 				aria-label="close modal"
 				class="text-secondary-hover hover:bg-primary-hover rounded-full p-1 focus:outline-none"
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-6 w-6"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M6 18L18 6M6 6l12 12"
-					/>
-				</svg>
+				<CloseSign />
 			</button>
 		</div>
 
@@ -86,20 +74,7 @@
 						class="border-primary-hover focus:border-secondary w-full rounded border bg-white p-3 pl-10 focus:outline-none"
 					/>
 					<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="h-5 w-5 text-gray-400"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-							/>
-						</svg>
+						<SearchIcon />
 					</div>
 				</div>
 			</div>
@@ -122,18 +97,7 @@
 											<div class="text-secondary">{room.name}</div>
 										</div>
 										{#if selectedRoomId === room.id}
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												class="text-secondary h-5 w-5"
-												viewBox="0 0 20 20"
-												fill="currentColor"
-											>
-												<path
-													fill-rule="evenodd"
-													d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-2.293-2.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
-													clip-rule="evenodd"
-												/>
-											</svg>
+											<TickedSign color="text-secondary" />
 										{/if}
 									</div>
 								</button>

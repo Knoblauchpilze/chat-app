@@ -30,3 +30,18 @@ export async function getRooms(): Promise<ApiResponse> {
 
 	return safeFetchJson(url, params);
 }
+
+export async function joinRoom(user: string, room: string): Promise<ApiResponse> {
+	const url = buildApiUrl('rooms/' + room + '/users');
+	const body = JSON.stringify({ chat_user: user });
+
+	const params = {
+		method: 'POST',
+		body: body,
+		headers: {
+			'content-type': 'application/json'
+		}
+	};
+
+	return safeFetchJson(url, params);
+}

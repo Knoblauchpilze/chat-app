@@ -2,7 +2,7 @@ import { loadCookiesOrRedirectToLogin, resetChatCookies } from '$lib/cookies';
 import { handleApiError } from '$lib/rest/api';
 import { getChatUser } from '$lib/services/users';
 import { chatUserResponseDtoToChatUserUiDto } from '$lib/converters/chatUserConverter';
-import { error, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import {
 	HttpStatus,
 	parseApiResponseAsArray,
@@ -81,5 +81,18 @@ export const actions = {
 		resetChatCookies(cookies);
 
 		redirect(HttpStatus.SEE_OTHER, '/');
+	},
+	joinRoom: async ({ request }) => {
+		const data = await request.formData();
+
+		const roomId = data.get('room');
+		if (!roomId) {
+			return fail(HttpStatus.UNPROCESSABLE_ENTITY, {
+				message: 'Please fill in the room to join',
+				roomId: roomId
+			});
+		}
+
+		redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + roomId);
 	}
 };

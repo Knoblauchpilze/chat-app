@@ -82,5 +82,5 @@
 </div>
 
 {#if showJoinRoomModal}
-	<JoinRoomModal {rooms} onClose={toggleJoinRoomModal} {onJoin} />
+	<JoinRoomModal {rooms} onClose={toggleJoinRoomModal} />
 {/if}

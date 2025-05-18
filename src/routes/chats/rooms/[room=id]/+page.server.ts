@@ -32,8 +32,8 @@ export async function load({ params, cookies }) {
 	apiResponse = await getRoomsForUser(chatUserDto.id);
 	handleApiError(apiResponse);
 
-	const rooms = parseApiResponseAsArray(apiResponse, RoomResponseDto);
-	if (rooms === undefined) {
+	const userRooms = parseApiResponseAsArray(apiResponse, RoomResponseDto);
+	if (userRooms === undefined) {
 		error(HttpStatus.INTERNAL_SERVER_ERROR, 'Failed to get rooms data');
 	}
 
@@ -58,7 +58,7 @@ export async function load({ params, cookies }) {
 	return {
 		user: chatUserResponseDtoToChatUserUiDto(chatUserDto),
 		room: params.room,
-		rooms: rooms.map((room) => roomResponseDtoToRoomUiDto(room)),
+		userRooms: userRooms.map((room) => roomResponseDtoToRoomUiDto(room)),
 		messages: messages.map((message) => messageResponseDtoToMessageUiDto(message, users)),
 		users: users.map((user) => chatUserResponseDtoToChatUserUiDto(user))
 	};

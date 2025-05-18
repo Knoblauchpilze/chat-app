@@ -110,12 +110,11 @@
 			</div>
 		</div>
 
-		<RoomsList currentRoom={data.room} {userRooms} {userRoomProps} />
+		<RoomsList currentRoom={data.room} {userRooms} {userRoomProps} rooms={data.rooms} />
 	</div>
 
 	<!-- Main chat area -->
 	<div class="bg-primary-selected flex flex-1 flex-col">
-		<!-- Chat header -->
 		<div class="border-primary-hover bg-primary flex items-center border-b p-4">
 			<StyledTitle text="Generals" textSize="text-lg" />
 		</div>

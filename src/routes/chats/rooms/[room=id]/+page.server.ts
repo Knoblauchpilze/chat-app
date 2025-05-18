@@ -9,7 +9,7 @@ import {
 	parseApiResponseAsSingleValue
 } from '@totocorpsoftwareinc/frontend-toolkit';
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
-import { getRoomsForUser, getUsersForRoom } from '$lib/services/rooms';
+import { getRooms, getRoomsForUser, getUsersForRoom } from '$lib/services/rooms';
 import { RoomResponseDto } from '$lib/communication/api/roomResponseDto';
 import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
 import { getMessagesForRoom } from '$lib/services/messages';
@@ -34,7 +34,7 @@ export async function load({ params, cookies }) {
 
 	const userRooms = parseApiResponseAsArray(apiResponse, RoomResponseDto);
 	if (userRooms === undefined) {
-		error(HttpStatus.INTERNAL_SERVER_ERROR, 'Failed to get rooms data');
+		error(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to get user's rooms data");
 	}
 
 	// Fetch the messages for the current room
@@ -55,10 +55,22 @@ export async function load({ params, cookies }) {
 		error(HttpStatus.INTERNAL_SERVER_ERROR, 'Failed to get users data');
 	}
 
+	// Fetch all the other rooms available on the server
+	apiResponse = await getRooms();
+	handleApiError(apiResponse);
+
+	const allRooms = parseApiResponseAsArray(apiResponse, RoomResponseDto);
+	if (allRooms === undefined) {
+		error(HttpStatus.INTERNAL_SERVER_ERROR, 'Failed to get rooms data');
+	}
+
+	const otherRooms = allRooms.filter((room) => userRooms.includes(room) === false);
+
 	return {
 		user: chatUserResponseDtoToChatUserUiDto(chatUserDto),
 		room: params.room,
 		userRooms: userRooms.map((room) => roomResponseDtoToRoomUiDto(room)),
+		rooms: otherRooms.map((room) => roomResponseDtoToRoomUiDto(room)),
 		messages: messages.map((message) => messageResponseDtoToMessageUiDto(message, users)),
 		users: users.map((user) => chatUserResponseDtoToChatUserUiDto(user))
 	};

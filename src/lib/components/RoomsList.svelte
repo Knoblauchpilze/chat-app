@@ -8,9 +8,10 @@
 		currentRoom: string;
 		userRooms: RoomUiDto[];
 		userRoomProps: RoomUiProps[];
+		rooms: RoomUiDto[];
 	}
 
-	let { currentRoom, userRooms, userRoomProps }: Props = $props();
+	let { currentRoom, userRooms, userRoomProps, rooms }: Props = $props();
 	let showJoinRoomModal: boolean = $state(false);
 
 	let unread = $derived.by(() => {
@@ -81,5 +82,5 @@
 </div>
 
 {#if showJoinRoomModal}
-	<JoinRoomModal rooms={userRooms} onClose={toggleJoinRoomModal} {onJoin} />
+	<JoinRoomModal {rooms} onClose={toggleJoinRoomModal} {onJoin} />
 {/if}

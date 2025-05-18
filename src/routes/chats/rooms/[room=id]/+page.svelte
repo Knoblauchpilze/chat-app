@@ -99,7 +99,7 @@
 
 <div class="flex h-screen w-full overflow-hidden">
 	<!-- Sidebar with rooms -->
-	<div class="bg-primary border-primary-hover w-64 overflow-y-auto border-r">
+	<div class="bg-primary border-primary-hover flex w-64 flex-col overflow-y-auto border-r">
 		<div class="border-primary-hover border-b p-4">
 			<StyledTitle text="Chatterly" textSize="text-xl" />
 			<div class="mt-2 flex items-center justify-between">

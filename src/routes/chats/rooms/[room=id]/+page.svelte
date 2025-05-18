@@ -116,7 +116,7 @@
 	<!-- Main chat area -->
 	<div class="bg-primary-selected flex flex-1 flex-col">
 		<div class="border-primary-hover bg-primary flex items-center border-b p-4">
-			<StyledTitle text="Generals" textSize="text-lg" />
+			<StyledTitle text="General" textSize="text-lg" />
 		</div>
 
 		<MessagesArea {messages} chatUserId={data.user.id} />

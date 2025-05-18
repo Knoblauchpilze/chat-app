@@ -6,10 +6,9 @@
 	interface Props {
 		rooms: RoomUiDto[];
 		onClose: () => void;
-		onJoin: (roomId: string) => void;
 	}
 
-	let { rooms, onClose, onJoin }: Props = $props();
+	let { rooms, onClose }: Props = $props();
 
 	let searchTerm = $state('');
 	let selectedRoomId: string | null = $state(null);
@@ -22,13 +21,6 @@
 
 	function selectRoom(roomId: string) {
 		selectedRoomId = roomId === selectedRoomId ? null : roomId;
-	}
-
-	function handleJoin() {
-		if (selectedRoomId) {
-			onJoin(selectedRoomId);
-			resetModal();
-		}
 	}
 
 	function handleClose() {
@@ -125,12 +117,11 @@
 				>
 					Cancel
 				</button>
-				<StyledButton
-					text="Join Room"
-					styling="px-4 py-2"
-					enabled={selectedRoomId !== null}
-					onClick={handleJoin}
-				/>
+
+				<form method="POST" action="?/joinRoom">
+					<input class="hidden" id="room" name="room" value={selectedRoomId} />
+					<StyledButton text="Join Room" styling="px-4 py-2" enabled={selectedRoomId !== null} />
+				</form>
 			</div>
 		</div>
 	</div>

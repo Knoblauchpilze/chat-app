@@ -1,15 +1,17 @@
 import { loadCookiesOrRedirectToLogin, resetChatCookies } from '$lib/cookies';
-import { handleApiError } from '$lib/rest/api';
+import { getErrorMessageFromApiResponse, handleApiError } from '$lib/rest/api';
 import { getChatUser } from '$lib/services/users';
 import { chatUserResponseDtoToChatUserUiDto } from '$lib/converters/chatUserConverter';
 import { error, fail, redirect } from '@sveltejs/kit';
 import {
+	getHttpStatusCodeFromApiFailure,
 	HttpStatus,
 	parseApiResponseAsArray,
-	parseApiResponseAsSingleValue
+	parseApiResponseAsSingleValue,
+	tryGetFailureReason
 } from '@totocorpsoftwareinc/frontend-toolkit';
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
-import { getRooms, getRoomsForUser, getUsersForRoom } from '$lib/services/rooms';
+import { getRooms, getRoomsForUser, getUsersForRoom, joinRoom } from '$lib/services/rooms';
 import { RoomResponseDto } from '$lib/communication/api/roomResponseDto';
 import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
 import { getMessagesForRoom } from '$lib/services/messages';
@@ -82,13 +84,29 @@ export const actions = {
 
 		redirect(HttpStatus.SEE_OTHER, '/');
 	},
-	joinRoom: async ({ request }) => {
+	joinRoom: async ({ cookies, request }) => {
+		const chatCookies = loadCookiesOrRedirectToLogin(cookies);
+
 		const data = await request.formData();
 
 		const roomId = data.get('room');
 		if (!roomId) {
 			return fail(HttpStatus.UNPROCESSABLE_ENTITY, {
 				message: 'Please fill in the room to join',
+				roomId: roomId
+			});
+		}
+
+		const apiResponse = await joinRoom(chatCookies.chatUserId, roomId as string);
+
+		if (apiResponse.isError()) {
+			const failure = tryGetFailureReason(apiResponse);
+
+			const code = getHttpStatusCodeFromApiFailure(failure);
+
+			return fail(code, {
+				message: getErrorMessageFromApiResponse(apiResponse),
+
 				roomId: roomId
 			});
 		}

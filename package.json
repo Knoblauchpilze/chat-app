@@ -31,7 +31,7 @@
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.26.0",
 		"eslint-config-prettier": "^10.1.5",
-		"eslint-plugin-svelte": "^3.5.1",
+		"eslint-plugin-svelte": "^3.8.1",
 		"fetch-mock": "^12.5.2",
 		"globals": "^16.1.0",
 		"prettier": "^3.5.3",

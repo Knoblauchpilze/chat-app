@@ -66,7 +66,7 @@ export async function load({ params, cookies }) {
 		error(HttpStatus.INTERNAL_SERVER_ERROR, 'Failed to get rooms data');
 	}
 
-	const otherRooms = allRooms.filter((room) => userRooms.includes(room) === false);
+	const otherRooms = allRooms.filter((room) => userRooms.findIndex((r) => r.id === room.id) === -1);
 
 	return {
 		user: chatUserResponseDtoToChatUserUiDto(chatUserDto),

@@ -34,10 +34,6 @@
 	function toggleJoinRoomModal() {
 		showJoinRoomModal = !showJoinRoomModal;
 	}
-
-	function onJoin(roomId: string) {
-		console.log('should join', roomId);
-	}
 </script>
 
 <div class="flex flex-grow flex-col justify-between p-2">

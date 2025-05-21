@@ -28,7 +28,7 @@
 	</a>
 	{#if room.name !== 'general'}
 		<form method="POST" action="?/leaveRoom" class="absolute right-2 hidden group-hover:block">
-			<input type="hidden" name="roomId" value={room.id} />
+			<input type="hidden" id="roomId" name="roomId" value={room.id} />
 			<button
 				type="submit"
 				class="text-secondary-hover p-1 hover:text-red-500"

@@ -11,7 +11,13 @@ import {
 	tryGetFailureReason
 } from '@totocorpsoftwareinc/frontend-toolkit';
 import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
-import { getRooms, getRoomsForUser, getUsersForRoom, joinRoom } from '$lib/services/rooms';
+import {
+	getRooms,
+	getRoomsForUser,
+	getUsersForRoom,
+	joinRoom,
+	leaveRoom
+} from '$lib/services/rooms';
 import { RoomResponseDto } from '$lib/communication/api/roomResponseDto';
 import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
 import { getMessagesForRoom } from '$lib/services/messages';
@@ -113,5 +119,52 @@ export const actions = {
 
 		redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + roomId);
 	},
-	leaveRoom: async ({}) => {}
+	leaveRoom: async ({ cookies, request, params }) => {
+		const chatCookies = loadCookiesOrRedirectToLogin(cookies);
+
+		const data = await request.formData();
+
+		const roomId = data.get('roomId');
+		if (!roomId) {
+			console.log('no room');
+			return fail(HttpStatus.UNPROCESSABLE_ENTITY, {
+				message: 'Please fill in the room to join',
+				roomId: roomId
+			});
+		}
+
+		console.log(chatCookies.chatUserId, 'leaving', roomId);
+		let apiResponse = await leaveRoom(chatCookies.chatUserId, roomId as string);
+
+		console.log('response:', JSON.stringify(apiResponse));
+
+		if (apiResponse.isError()) {
+			const failure = tryGetFailureReason(apiResponse);
+
+			const code = getHttpStatusCodeFromApiFailure(failure);
+
+			return fail(code, {
+				message: getErrorMessageFromApiResponse(apiResponse),
+
+				roomId: roomId
+			});
+		}
+
+		// In case the user left the current room, we need to redirect to another one.
+		// Otherwise we can just stay on the same room.
+		if (roomId === params.room) {
+			redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + params.room);
+		}
+
+		// Fetch the rooms the user belongs to
+		apiResponse = await getRoomsForUser(chatCookies.chatUserId);
+		handleApiError(apiResponse);
+
+		const userRooms = parseApiResponseAsArray(apiResponse, RoomResponseDto);
+		if (userRooms === undefined || userRooms.length === 0) {
+			error(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to get user's rooms data");
+		}
+
+		redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + userRooms[0].id);
+	}
 };

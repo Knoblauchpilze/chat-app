@@ -2,7 +2,7 @@
 	import { StyledText } from '@totocorpsoftwareinc/frontend-toolkit';
 	import type { RoomUiProps } from '$lib/communication/ui/roomUiProps';
 	import type { RoomUiDto } from '$lib/communication/ui/roomUiDto';
-	import { CloseSign, JoinRoomModal, RoomEntry } from '$lib/components';
+	import { JoinRoomModal, RoomEntry } from '$lib/components';
 
 	interface Props {
 		currentRoom: string;
@@ -42,11 +42,7 @@
 		<ul>
 			{#each userRooms as room, id (room.id)}
 				<li class="group relative mb-1">
-					<RoomEntry
-						{room}
-						roomProps={userRoomProps.find((prop) => prop.room === room.id)}
-						selected={room.id === currentRoom}
-					/>
+					<RoomEntry {room} roomProps={unread[id]} selected={room.id === currentRoom} />
 				</li>
 			{/each}
 		</ul>

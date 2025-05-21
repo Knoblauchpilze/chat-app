@@ -112,5 +112,6 @@ export const actions = {
 		}
 
 		redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + roomId);
-	}
+	},
+	leaveRoom: async ({}) => {}
 };

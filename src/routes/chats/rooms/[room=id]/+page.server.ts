@@ -51,6 +51,11 @@ export async function load({ params, cookies }) {
 		error(HttpStatus.FORBIDDEN, 'You are not allowed to access this room');
 	}
 
+	const room = userRooms.find((room) => room.id === params.room);
+	if (room === undefined) {
+		error(HttpStatus.INTERNAL_SERVER_ERROR, 'Failed to get room data');
+	}
+
 	// Fetch the messages for the current room
 	apiResponse = await getMessagesForRoom(params.room);
 	handleApiError(apiResponse);
@@ -83,6 +88,7 @@ export async function load({ params, cookies }) {
 	return {
 		user: chatUserResponseDtoToChatUserUiDto(chatUserDto),
 		room: params.room,
+		roomName: room.name,
 		userRooms: userRooms.map((room) => roomResponseDtoToRoomUiDto(room)),
 		rooms: otherRooms.map((room) => roomResponseDtoToRoomUiDto(room)),
 		messages: messages.map((message) => messageResponseDtoToMessageUiDto(message, users)),

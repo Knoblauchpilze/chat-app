@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { StyledButton, StyledText, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
+	import { StyledButton, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
 	import { MessagesArea, MessageInput, RoomsList } from '$lib/components';
 	import { onMount } from 'svelte';
 	import { connectToServer } from '$lib/sse/connection';

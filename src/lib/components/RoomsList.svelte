@@ -2,7 +2,7 @@
 	import { StyledText } from '@totocorpsoftwareinc/frontend-toolkit';
 	import type { RoomUiProps } from '$lib/communication/ui/roomUiProps';
 	import type { RoomUiDto } from '$lib/communication/ui/roomUiDto';
-	import { JoinRoomModal } from '$lib/components';
+	import { CloseSign, JoinRoomModal, RoomEntry } from '$lib/components';
 
 	interface Props {
 		currentRoom: string;
@@ -41,31 +41,12 @@
 		<StyledText text="Rooms" styling="text-secondary text-sm font-semibold mb-2" />
 		<ul>
 			{#each userRooms as room, id (room.id)}
-				<li class="mb-1">
-					{#if room.id === currentRoom}
-						<a
-							class="bg-primary-hover text-secondary flex w-full items-center justify-between rounded p-2 text-left"
-							href={'/chats/rooms/' + room.id}
-						>
-							{room.name}
-						</a>
-					{:else}
-						<a
-							class="hover:bg-primary-hover text-secondary flex w-full items-center justify-between rounded p-2 text-left"
-							href={'/chats/rooms/' + room.id}
-						>
-							{#if unread[id].unreadMessages == 0}
-								<span>{room.name}</span>
-							{:else}
-								<span class="font-bold">{room.name}</span>
-								<span
-									class="bg-secondary ml-1 rounded-full px-1.5 py-0.5 text-xs font-medium text-white"
-								>
-									{unread[id].unreadMessages}
-								</span>
-							{/if}
-						</a>
-					{/if}
+				<li class="group relative mb-1">
+					<RoomEntry
+						{room}
+						roomProps={userRoomProps.find((prop) => prop.room === room.id)}
+						selected={room.id === currentRoom}
+					/>
 				</li>
 			{/each}
 		</ul>

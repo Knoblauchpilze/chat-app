@@ -45,3 +45,13 @@ export async function joinRoom(user: string, room: string): Promise<ApiResponse>
 
 	return safeFetchJson(url, params);
 }
+
+export async function leaveRoom(user: string, room: string): Promise<ApiResponse> {
+	const url = buildApiUrl('rooms/' + room + '/users/' + user);
+
+	const params = {
+		method: 'DELETE'
+	};
+
+	return safeFetchJson(url, params);
+}

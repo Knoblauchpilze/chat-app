@@ -45,6 +45,12 @@ export async function load({ params, cookies }) {
 		error(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to get user's rooms data");
 	}
 
+	// Verify that the user belong to the current room
+	const belongs = userRooms.findIndex((room) => room.id === params.room) !== -1;
+	if (!belongs) {
+		error(HttpStatus.FORBIDDEN, 'You are not allowed to access this room');
+	}
+
 	// Fetch the messages for the current room
 	apiResponse = await getMessagesForRoom(params.room);
 	handleApiError(apiResponse);

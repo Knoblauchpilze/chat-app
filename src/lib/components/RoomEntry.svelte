@@ -5,7 +5,7 @@
 
 	interface Props {
 		selected: boolean;
-		roomProps: RoomUiProps | undefined;
+		roomProps: RoomUiProps;
 		room: RoomUiDto;
 	}
 

@@ -26,14 +26,16 @@
 			</span>
 		{/if}
 	</a>
-	<form method="POST" action="?/leaveRoom" class="absolute right-2 hidden group-hover:block">
-		<input type="hidden" name="roomId" value={room.id} />
-		<button
-			type="submit"
-			class="text-secondary-hover p-1 hover:text-red-500"
-			aria-label="Leave room"
-		>
-			<CloseSign />
-		</button>
-	</form>
+	{#if room.name !== 'general'}
+		<form method="POST" action="?/leaveRoom" class="absolute right-2 hidden group-hover:block">
+			<input type="hidden" name="roomId" value={room.id} />
+			<button
+				type="submit"
+				class="text-secondary-hover p-1 hover:text-red-500"
+				aria-label="Leave room"
+			>
+				<CloseSign />
+			</button>
+		</form>
+	{/if}
 </div>

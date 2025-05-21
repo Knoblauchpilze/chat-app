@@ -101,13 +101,7 @@
 	<!-- Sidebar with rooms -->
 	<div class="bg-primary border-primary-hover flex w-64 flex-col overflow-y-auto border-r">
 		<div class="border-primary-hover border-b p-4">
-			<StyledTitle text="Chatterly" textSize="text-xl" />
-			<div class="mt-2 flex items-center justify-between">
-				<StyledText text={`Hello, ${data.user.name}`} styling="text-sm" />
-				<form method="POST" action="?/logout" class="inline">
-					<StyledButton text="Logout" styling="text-xs py-1 px-2" />
-				</form>
-			</div>
+			<StyledTitle text={`Hello, ${data.user.name}`} styling="text-xl" />
 		</div>
 
 		<RoomsList currentRoom={data.room} {userRooms} {userRoomProps} rooms={data.rooms} />
@@ -115,8 +109,14 @@
 
 	<!-- Main chat area -->
 	<div class="bg-primary-selected flex flex-1 flex-col">
-		<div class="border-primary-hover bg-primary flex items-center border-b p-4">
+		<div class="border-primary-hover bg-primary flex items-center justify-between border-b p-4">
 			<StyledTitle text="General" textSize="text-lg" />
+
+			<div class="mt-2 flex items-center justify-between">
+				<form method="POST" action="?/logout" class="inline">
+					<StyledButton text="Logout" styling="text-xs py-1 px-2" />
+				</form>
+			</div>
 		</div>
 
 		<MessagesArea {messages} chatUserId={data.user.id} />

@@ -26,6 +26,8 @@
 	let userRooms = $derived(data.userRooms);
 	let userRoomProps: RoomUiProps[] = $state([]);
 
+	let roomName = $derived(data.roomName[0].toUpperCase() + data.roomName.slice(1));
+
 	// https://stackoverflow.com/questions/64921224/how-to-run-server-sent-events-in-svelte-component-in-sapper
 	onMount(() => {
 		const props = {
@@ -110,7 +112,7 @@
 	<!-- Main chat area -->
 	<div class="bg-primary-selected flex flex-1 flex-col">
 		<div class="border-primary-hover bg-primary flex items-center justify-between border-b p-4">
-			<StyledTitle text="General" textSize="text-lg" />
+			<StyledTitle text={roomName} textSize="text-lg" />
 
 			<div class="mt-2 flex items-center justify-between">
 				<form method="POST" action="?/logout" class="inline">

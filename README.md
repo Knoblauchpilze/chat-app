@@ -103,4 +103,4 @@ The user can leave any room they belong to except the `general` one. This can be
 
 When the mouse is on the cross it becomes red. There are no confirmation and when the user clicks a request will be made to the server to unregister the user from the room. In case it is the room currently being displayed the page will be reloaded to another room.
 
-All messages belonging to users leaving a room will be re-assigned to a common `ghost` user, registered in any room.
+All messages belonging to users leaving a room will be re-assigned to a common `ghost` user, registered in all room.

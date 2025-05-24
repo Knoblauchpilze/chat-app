@@ -91,9 +91,9 @@ There the user can look for a room to join by name. There's a fuzzy matching log
 
 On any room, the user an type a message and send it. The details about how this works in the backend are presenting in the dedicated section of the corresponding README (see [here](https://github.com/Knoblauchpilze/chat-server?tab=readme-ov-file#how-does-this-work)): the general idea is that the message will be sent and if it succeeds to be registered (i.e. the user is allowed to send the message) it will be broadcast to all currently connected clients, including the original client. It should be visible immediately in the UI.
 
-In case amessage is received in a different room than the user currently sees, a notification system will be visible to represent how many unread messages are available in other rooms.
+In case amessage is received in a different room than the user currently sees, a notification system will be visible to represent how many unread messages are available in other rooms:
 
-TODO: This is broken
+![notifications](resources/notifications.png)
 
 ## Leaving a room
 

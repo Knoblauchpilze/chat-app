@@ -138,17 +138,13 @@ export const actions = {
 
 		const roomId = data.get('roomId');
 		if (!roomId) {
-			console.log('no room');
 			return fail(HttpStatus.UNPROCESSABLE_ENTITY, {
 				message: 'Please fill in the room to join',
 				roomId: roomId
 			});
 		}
 
-		console.log(chatCookies.chatUserId, 'leaving', roomId);
 		let apiResponse = await leaveRoom(chatCookies.chatUserId, roomId as string);
-
-		console.log('response:', JSON.stringify(apiResponse));
 
 		if (apiResponse.isError()) {
 			const failure = tryGetFailureReason(apiResponse);
@@ -164,7 +160,7 @@ export const actions = {
 
 		// In case the user left the current room, we need to redirect to another one.
 		// Otherwise we can just stay on the same room.
-		if (roomId === params.room) {
+		if (roomId !== params.room) {
 			redirect(HttpStatus.SEE_OTHER, '/chats/rooms/' + params.room);
 		}
 

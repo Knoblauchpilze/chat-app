@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { RoomUiProps } from '$lib/communication/ui/roomUiProps';
 	import type { RoomUiDto } from '$lib/communication/ui/roomUiDto';
 	import { CloseSign } from '$lib/components';
@@ -16,7 +17,7 @@
 </script>
 
 <div class="flex items-center">
-	<a class="{roomStyle} {backgroundStyle}" href={'/chats/rooms/' + room.id}>
+	<a class="{roomStyle} {backgroundStyle}" href={resolve('/chats/rooms/[room]', { room: room.id })}>
 		{#if !roomProps || roomProps.unreadMessages == 0}
 			<span>{room.name}</span>
 		{:else}

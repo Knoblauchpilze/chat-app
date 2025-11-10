@@ -18,7 +18,7 @@
 	"dependencies": {
 		"@tailwindcss/vite": "^4.1.17",
 		"@totocorpsoftwareinc/frontend-toolkit": "^0.0.44",
-		"msw": "^2.11.6",
+		"msw": "^2.12.1",
 		"uuid": "^13.0.0"
 	},
 	"devDependencies": {

@@ -22,6 +22,7 @@
 		"uuid": "^13.0.0"
 	},
 	"devDependencies": {
+		"@eslint/js": "^10.0.1",
 		"@eslint/compat": "^2.0.3",
 		"@sveltejs/adapter-node": "^5.5.3",
 		"@sveltejs/kit": "^2.53.4",

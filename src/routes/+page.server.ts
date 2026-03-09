@@ -72,7 +72,7 @@ export const actions = {
 			});
 		}
 
-		let chatUserDto: ChatUserResponseDto | undefined = undefined;
+		let chatUserDto: ChatUserResponseDto | undefined;
 
 		if (!userExists) {
 			chatUserDto = parseApiResponseAsSingleValue(apiResponse, ChatUserResponseDto);

@@ -30,7 +30,7 @@
 		"@types/node": "^25.7.0",
 		"@vitest/coverage-v8": "^4.1.6",
 		"autoprefixer": "^10.5.0",
-		"eslint": "^10.3.0",
+		"eslint": "^10.4.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.17.1",
 		"fetch-mock": "^12.6.0",

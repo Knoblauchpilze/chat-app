@@ -40,8 +40,7 @@
 			bind:value={newMessage}
 			onkeydown={handleKeyDown}
 			class="border-primary-hover focus:border-secondary flex-1 resize-none rounded-l-md border bg-white p-2 focus:outline-none"
-			rows="2"
-		></textarea>
+			rows="2"></textarea>
 		{#if newMessage !== ''}
 			<button
 				onclick={handleMessageSent}

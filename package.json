@@ -19,7 +19,7 @@
 		"@tailwindcss/vite": "^4.3.3",
 		"@totocorpsoftwareinc/frontend-toolkit": "^0.0.46",
 		"msw": "^2.15.0",
-		"uuid": "^14.0.1"
+		"uuid": "^14.0.2"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",

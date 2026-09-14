@@ -1,4 +1,4 @@
-FROM node:22 AS builder
+FROM node:26 AS builder
 ARG API_BASE_URL="http://chat-service:80/v1/my-awesome-service"
 ARG TCP_API_HOST="http://chat-service"
 ARG TCP_API_PORT=49152
@@ -10,7 +10,7 @@ RUN echo "PUBLIC_TCP_API_PORT=${TCP_API_PORT}" >> .env
 RUN npm install
 RUN npm run build
 
-FROM node:22-alpine3.18
+FROM node:26-alpine3.24
 ARG GIT_COMMIT_HASH="undefined"
 ARG SERVER_ORIGIN="http://localhost:3001"
 ARG NODE_PORT=3001

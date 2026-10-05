@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { StyledButton, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
-	import { MessagesArea, MessageInput, RoomsList } from '$lib/components';
+	import { MessagesArea, MessageInput, RoomsList } from '#lib/components';
 	import { onMount } from 'svelte';
-	import { connectToServer } from '$lib/sse/connection';
-	import type { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
-	import { sendMessage } from '$lib/services/messages';
-	import { getErrorMessageFromApiResponse } from '$lib/rest/api';
-	import { messageResponseDtoToMessageUiDtoFromUiUser } from '$lib/converters/messageConverter';
-	import type { RoomUiProps } from '$lib/communication/ui/roomUiProps';
+	import { connectToServer } from '#lib/sse/connection';
+	import type { MessageResponseDto } from '#lib/communication/api/messageResponseDto';
+	import { sendMessage } from '#lib/services/messages';
+	import { getErrorMessageFromApiResponse } from '#lib/rest/api';
+	import { messageResponseDtoToMessageUiDtoFromUiUser } from '#lib/converters/messageConverter';
+	import type { RoomUiProps } from '#lib/communication/ui/roomUiProps';
 	import { afterNavigate } from '$app/navigation';
 
 	let { data } = $props();

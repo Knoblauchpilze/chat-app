@@ -1,4 +1,4 @@
-import { buildApiUrl } from '$lib/rest/api';
+import { buildApiUrl } from '#lib/rest/api';
 import { safeFetchJson, type ApiResponse } from '@totocorpsoftwareinc/frontend-toolkit';
 
 export async function getRoomsForUser(id: string): Promise<ApiResponse> {

@@ -1,5 +1,5 @@
 import { redirect, type Cookies } from '@sveltejs/kit';
-import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
+import { ChatUserResponseDto } from '#lib/communication/api/chatUserResponseDto';
 import { HttpStatus } from '@totocorpsoftwareinc/frontend-toolkit';
 
 const DEFAULT_COOKIES_OPT = {

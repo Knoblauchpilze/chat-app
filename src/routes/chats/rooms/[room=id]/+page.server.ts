@@ -1,7 +1,7 @@
-import { loadCookiesOrRedirectToLogin, resetChatCookies } from '$lib/cookies';
-import { getErrorMessageFromApiResponse, handleApiError } from '$lib/rest/api';
-import { getChatUser } from '$lib/services/users';
-import { chatUserResponseDtoToChatUserUiDto } from '$lib/converters/chatUserConverter';
+import { loadCookiesOrRedirectToLogin, resetChatCookies } from '#lib/cookies';
+import { getErrorMessageFromApiResponse, handleApiError } from '#lib/rest/api';
+import { getChatUser } from '#lib/services/users';
+import { chatUserResponseDtoToChatUserUiDto } from '#lib/converters/chatUserConverter';
 import { error, fail, redirect } from '@sveltejs/kit';
 import {
 	getHttpStatusCodeFromApiFailure,
@@ -10,19 +10,19 @@ import {
 	parseApiResponseAsSingleValue,
 	tryGetFailureReason
 } from '@totocorpsoftwareinc/frontend-toolkit';
-import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
+import { ChatUserResponseDto } from '#lib/communication/api/chatUserResponseDto';
 import {
 	getRooms,
 	getRoomsForUser,
 	getUsersForRoom,
 	joinRoom,
 	leaveRoom
-} from '$lib/services/rooms';
-import { RoomResponseDto } from '$lib/communication/api/roomResponseDto';
-import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
-import { getMessagesForRoom } from '$lib/services/messages';
-import { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
-import { messageResponseDtoToMessageUiDto } from '$lib/converters/messageConverter';
+} from '#lib/services/rooms';
+import { RoomResponseDto } from '#lib/communication/api/roomResponseDto';
+import { roomResponseDtoToRoomUiDto } from '#lib/converters/roomConverter';
+import { getMessagesForRoom } from '#lib/services/messages';
+import { MessageResponseDto } from '#lib/communication/api/messageResponseDto';
+import { messageResponseDtoToMessageUiDto } from '#lib/converters/messageConverter';
 
 export async function load({ params, cookies }) {
 	const chatCookies = loadCookiesOrRedirectToLogin(cookies);

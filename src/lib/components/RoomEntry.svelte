@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import type { RoomUiProps } from '$lib/communication/ui/roomUiProps';
-	import type { RoomUiDto } from '$lib/communication/ui/roomUiDto';
-	import { CloseSign } from '$lib/components';
+	import type { RoomUiProps } from '#lib/communication/ui/roomUiProps';
+	import type { RoomUiDto } from '#lib/communication/ui/roomUiDto';
+	import { CloseSign } from '#lib/components';
 
 	interface Props {
 		selected: boolean;

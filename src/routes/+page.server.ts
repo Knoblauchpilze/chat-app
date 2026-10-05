@@ -1,11 +1,11 @@
-import { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
-import { RoomResponseDto } from '$lib/communication/api/roomResponseDto';
-import { chatUserResponseDtoToChatUserUiDto } from '$lib/converters/chatUserConverter';
-import { roomResponseDtoToRoomUiDto } from '$lib/converters/roomConverter';
-import { loadChatCookies, resetChatCookies, setChatCookies } from '$lib/cookies';
-import { getErrorMessageFromApiResponse, handleApiError } from '$lib/rest/api';
-import { getRoomsForUser } from '$lib/services/rooms';
-import { createChatUser, getChatUser, listUsersByName } from '$lib/services/users';
+import { ChatUserResponseDto } from '#lib/communication/api/chatUserResponseDto';
+import { RoomResponseDto } from '#lib/communication/api/roomResponseDto';
+import { chatUserResponseDtoToChatUserUiDto } from '#lib/converters/chatUserConverter';
+import { roomResponseDtoToRoomUiDto } from '#lib/converters/roomConverter';
+import { loadChatCookies, resetChatCookies, setChatCookies } from '#lib/cookies';
+import { getErrorMessageFromApiResponse, handleApiError } from '#lib/rest/api';
+import { getRoomsForUser } from '#lib/services/rooms';
+import { createChatUser, getChatUser, listUsersByName } from '#lib/services/users';
 import { fail, redirect } from '@sveltejs/kit';
 import {
 	getHttpStatusCodeFromApiFailure,

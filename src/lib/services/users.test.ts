@@ -1,7 +1,7 @@
 import { describe, it, assert, expect, afterEach } from 'vitest';
 import fetchMock from 'fetch-mock';
-import { createChatUser, getChatUser, listUsersByName } from '$lib/services/users';
-import { createRouteMatcher } from '$lib/services/testUtils';
+import { createChatUser, getChatUser, listUsersByName } from '#lib/services/users';
+import { createRouteMatcher } from '#lib/services/testUtils';
 
 describe('Create chat user', () => {
 	// https://vitest.dev/api/#aftereach

@@ -1,7 +1,7 @@
 import { describe, it, assert, expect, afterEach } from 'vitest';
 import fetchMock from 'fetch-mock';
-import { getMessagesForRoom, sendMessage } from '$lib/services/messages';
-import { createRouteMatcher } from '$lib/services/testUtils';
+import { getMessagesForRoom, sendMessage } from '#lib/services/messages';
+import { createRouteMatcher } from '#lib/services/testUtils';
 
 describe('Get messages for room', () => {
 	afterEach(async () => {

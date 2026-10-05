@@ -1,8 +1,8 @@
-import type { ChatUserResponseDto } from '$lib/communication/api/chatUserResponseDto';
-import type { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
-import type { ChatUserUiDto } from '$lib/communication/ui/chatUserUiDto';
-import type { MessageUiDto } from '$lib/communication/ui/messageUiDto';
-import { formatDate } from '$lib/time';
+import type { ChatUserResponseDto } from '#lib/communication/api/chatUserResponseDto';
+import type { MessageResponseDto } from '#lib/communication/api/messageResponseDto';
+import type { ChatUserUiDto } from '#lib/communication/ui/chatUserUiDto';
+import type { MessageUiDto } from '#lib/communication/ui/messageUiDto';
+import { formatDate } from '#lib/time';
 
 export function messageResponseDtoToMessageUiDto(
 	apiDto: MessageResponseDto,

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { StyledText } from '@totocorpsoftwareinc/frontend-toolkit';
-	import type { RoomUiProps } from '$lib/communication/ui/roomUiProps';
-	import type { RoomUiDto } from '$lib/communication/ui/roomUiDto';
-	import { JoinRoomModal, RoomEntry } from '$lib/components';
+	import type { RoomUiProps } from '#lib/communication/ui/roomUiProps';
+	import type { RoomUiDto } from '#lib/communication/ui/roomUiDto';
+	import { JoinRoomModal, RoomEntry } from '#lib/components';
 
 	interface Props {
 		currentRoom: string;

@@ -1,5 +1,5 @@
-import { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
-import { buildApiUrl } from '$lib/rest/api';
+import { MessageResponseDto } from '#lib/communication/api/messageResponseDto';
+import { buildApiUrl } from '#lib/rest/api';
 
 export interface ConnectionProps {
 	onConnected: () => void;

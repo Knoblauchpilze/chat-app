@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type MessageUiDto } from '$lib/communication/ui/messageUiDto';
+	import { type MessageUiDto } from '#lib/communication/ui/messageUiDto';
 	import { StyledText } from '@totocorpsoftwareinc/frontend-toolkit';
 	import { tick } from 'svelte';
 

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { RoomUiDto } from '$lib/communication/ui/roomUiDto';
+	import type { RoomUiDto } from '#lib/communication/ui/roomUiDto';
 	import { StyledButton, StyledTitle } from '@totocorpsoftwareinc/frontend-toolkit';
-	import { CloseSign, SearchIcon, TickedSign } from '$lib/components';
+	import { CloseSign, SearchIcon, TickedSign } from '#lib/components';
 
 	interface Props {
 		rooms: RoomUiDto[];

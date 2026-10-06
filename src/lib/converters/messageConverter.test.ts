@@ -1,6 +1,6 @@
-import { MessageResponseDto } from '$lib/communication/api/messageResponseDto';
+import { MessageResponseDto } from '#lib/communication/api/messageResponseDto';
 import { describe, expect, it } from 'vitest';
-import { messageResponseDtoToMessageUiDto } from '$lib/converters/messageConverter';
+import { messageResponseDtoToMessageUiDto } from '#lib/converters/messageConverter';
 
 const SAMPLE_MESSAGE_RESPONSE = {
 	id: 'fa5e2b80-1c1e-417a-8195-21cb5c60c4ae',
